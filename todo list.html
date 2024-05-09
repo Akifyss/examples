@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colorful Modern To-Do List</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://code.iconify.design/2/2.2.1/iconify.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body,
+        #UIContainner {
+            background: transparent !important;
+            padding: 0 !important;
+        }
+
+        #UIContainner,
+        #UI {
+            width: 100% !important;
+            height: 100% !important;
+            max-width: none !important;
+            min-width: none !important;
+            max-height: none !important;
+            min-height: none !important;
+            position: static !important;
+        }
+
+        .task-input {
+            background-color: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .iconify {
+            width: 24px;
+            height: 24px;
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 font-inter">
+    <div id="UIContainner">
+        <div id="UI" class="flex justify-center items-center h-screen">
+            <div class="bg-white rounded-lg shadow-lg p-5 md:p-10 lg:w-2/5">
+                <h1 class="text-2xl font-bold text-center mb-4">To-Do List</h1>
+                <div class="flex space-x-4 mb-5">
+                    <input type="text" placeholder="Add new task"
+                        class="w-full p-2 rounded-lg focus:outline-none task-input border-2 border-gray-300">
+                    <button
+                        class="bg-blue-500 text-white p-2 rounded-full shadow-lg hover:bg-blue-600 transition duration-200 h-10 w-10 flex items-center justify-center">
+                        <span class="iconify" data-icon="mdi:plus"></span>
+                    </button>
+                </div>
+                <ul class="h-64 overflow-y-auto">
+                    <!-- Example Task -->
+                    <li class="p-2 mb-2 rounded flex justify-between items-center">
+                        <span>Learn Tailwind CSS</span>
+                        <button class="text-gray-500 hover:text-gray-600">
+                            <span class="iconify" data-icon="mdi:close"></span>
+                        </button>
+                    </li>
+                    <!-- Example Task End -->
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script>
+        const addButton = document.querySelector('#UI button');
+        const taskInput = document.querySelector('#UI input[type="text"]');
+        const taskList = document.querySelector('#UI ul');
+
+        addButton.addEventListener('click', function () {
+            const taskValue = taskInput.value.trim();
+            if (taskValue) {
+                const newTask = document.createElement('li');
+                newTask.className = 'p-2 mb-2 rounded flex justify-between items-center';
+                newTask.innerHTML = `<span>${taskValue}</span>
+                                     <button class="text-gray-500 hover:text-gray-600">
+                                         <span class="iconify" data-icon="mdi:close"></span>
+                                     </button>`;
+                taskList.appendChild(newTask);
+
+                // Clear input field
+                taskInput.value = '';
+
+                // Add delete function
+                newTask.querySelector('button').addEventListener('click', function () {
+                    this.parentElement.remove();
+                });
+            }
+        });
+
+        // Add delete function to example task
+        document.querySelectorAll('#UI ul li button').forEach(button => {
+            button.addEventListener('click', function () {
+                this.parentElement.remove();
+            });
+        });
+    </script>
+</body>
+
+</html>

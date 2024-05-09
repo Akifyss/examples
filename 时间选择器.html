@@ -1,0 +1,195 @@
+<script src="https://code.iconify.design/2/2.2.1/iconify.min.js"></script>
+
+<div id="container" class="container" style="left:50px; top: 50px">
+    <span class="iconify drag-icon" data-icon="grommet-icons:drag"
+        style="position: absolute; left: -16px; top: -16px; cursor: move;"></span>
+
+    <!DOCTYPE html>
+    <html lang="zh">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>时间选择器</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+            :root {
+                --defaultWidth: 300px;
+                --defaultHeight: 50px;
+                --uiWidth: var(--defaultWidth);
+                --uiHeight: var(--defaultHeight);
+            }
+
+            #UIcontent {
+                width: var(--uiWidth);
+                height: var(--uiHeight);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0;
+            }
+
+            #timeInput {
+                width: 100%;
+                height: 100%;
+                padding: 10px;
+                box-sizing: border-box;
+                font-size: 16px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="UIcontent">
+            <input type="time" id="timeInput" class="shadow appearance-none border rounded py-2 px-3 text-grey-darker">
+        </div>
+    </body>
+
+    </html>
+
+</div>
+
+<style>
+    .container {
+        border: 2px solid #3786f4;
+        box-sizing: content-box;
+        position: absolute;
+        z-index: 1000;
+    }
+
+    .drag-icon {
+        z-index: 1000;
+    }
+</style>
+
+<script>
+    fetch('时间选择器.json')
+        .then(response => response.json())
+        .then(data => {
+            const defaultWidth = data.defaultWidth;
+            const defaultHeight = data.defaultHeight;
+            const container = document.getElementById('container');
+            container.style.width = defaultWidth;
+            container.style.height = defaultHeight;
+            document.documentElement.style.setProperty('--defaultWidth', defaultWidth);
+            document.documentElement.style.setProperty('--defaultHeight', defaultHeight);
+        });
+
+    let MARGIN = 5;
+    var container = document.getElementById('container');
+    var dragIcon = document.querySelector('.drag-icon');
+    var isDragging = false;
+    let containerWidth, containerHeight;
+
+
+    dragIcon.addEventListener("mousedown", function (event) {
+        isDragging = true;
+        var startX = event.clientX;
+        var startY = event.clientY;
+        var origX = container.offsetLeft;
+        var origY = container.offsetTop;
+        var deltaX = startX - origX;
+        var deltaY = startY - origY;
+
+        function onMove(event) {
+            if (isDragging) {
+                var newX = event.clientX - deltaX;
+                var newY = event.clientY - deltaY;
+                container.style.left = newX + 'px';
+                container.style.top = newY + 'px';
+            }
+        }
+
+        function onUp() {
+            isDragging = false;
+            document.removeEventListener('mousemove', onMove);
+            document.removeEventListener('mouseup', onUp);
+        }
+
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+        event.preventDefault(); // 防止默认事件发生
+    });
+
+    container.addEventListener("mousedown", function (event) {
+        if (event.target.id === 'container') {
+            onMouseDown(event);
+        }
+    });
+    container.addEventListener("mousemove", function (event) {
+        if (event.target.id === 'container') {
+            onMouseMove(event);
+        }
+    });
+
+    function onMouseDown(event) {
+        var container = event.target;
+        var b = container.getBoundingClientRect();
+        var x = event.clientX - b.left;
+        var y = event.clientY - b.top;
+        let initialClientX = event.clientX;
+        let initialClientY = event.clientY;
+        var onTopEdge = y < MARGIN;
+        var onLeftEdge = x < MARGIN;
+        var onRightEdge = x >= b.width - MARGIN;
+        var onBottomEdge = y >= b.height - MARGIN;
+        var isResizing = onRightEdge || onLeftEdge || onTopEdge || onBottomEdge;
+
+        if (isResizing) {
+            function onMouseMoveResize(event) {
+                if (onRightEdge) {
+                    container.style.width = (event.clientX - b.left) + 'px';
+                }
+                if (onBottomEdge) {
+                    container.style.height = (event.clientY - b.top) + 'px';
+                }
+                if (onLeftEdge) {
+                    container.style.left = event.clientX + 'px';
+                    container.style.width = (initialClientX - event.clientX + b.width) + 'px';
+                }
+                if (onTopEdge) {
+                    container.style.top = event.clientY + 'px';
+                    container.style.height = (initialClientY - event.clientY + b.height) + 'px';
+                }
+                containerWidth = container.style.width;
+                containerHeight = container.style.height;
+                document.documentElement.style.setProperty('--uiWidth', containerWidth);
+                document.documentElement.style.setProperty('--uiHeight', containerHeight);
+            }
+
+            function onMouseUpResize() {
+                document.removeEventListener('mousemove', onMouseMoveResize);
+                document.removeEventListener('mouseup', onMouseUpResize);
+            }
+
+            document.addEventListener('mousemove', onMouseMoveResize);
+            document.addEventListener('mouseup', onMouseUpResize);
+        }
+    }
+
+    function onMouseMove(event) {
+        var container = event.target;
+        var b = container.getBoundingClientRect();
+        var x = event.clientX - b.left;
+        var y = event.clientY - b.top;
+        var onTopEdge = y < MARGIN;
+        var onLeftEdge = x < MARGIN;
+        var onRightEdge = x >= b.width - MARGIN;
+        var onBottomEdge = y >= b.height - MARGIN;
+
+        if (onRightEdge && onBottomEdge || onLeftEdge && onTopEdge) {
+            container.style.cursor = 'nwse-resize';
+        } else if (onRightEdge && onTopEdge || onBottomEdge && onLeftEdge) {
+            container.style.cursor = 'nesw-resize';
+        } else if (onRightEdge || onLeftEdge) {
+            container.style.cursor = 'ew-resize';
+        } else if (onBottomEdge || onTopEdge) {
+            container.style.cursor = 'ns-resize';
+        } else {
+            container.style.cursor = 'move';
+        }
+    }
+
+
+
+</script>

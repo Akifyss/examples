@@ -1,0 +1,391 @@
+<script src="https://code.iconify.design/2/2.2.1/iconify.min.js"></script>
+
+<div id="container" class="container" style="left:50px; top: 50px">
+    <span class="iconify drag-icon" data-icon="grommet-icons:drag"
+        style="position: absolute; left: -16px; top: -16px; cursor: move;"></span>
+
+
+    <!-- 一个计算器 -->
+
+    <!DOCTYPE html>
+    <html lang="zh-CN">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>计算器</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
+        <style>
+            #calculator-container {
+                width: 100% !important;
+                height: 100% !important;
+                margin: 0 !important;
+                max-width: none !important;
+                min-width: none !important;
+                max-height: none !important;
+                min-height: none !important;
+                position: static !important;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <div id="calculator-container" class="shadow-lg rounded-lg p-6 calculator-grid grid grid-cols-4 gap-3">
+            <div class="output col-span-4 bg-gray-200 rounded p-3 text-right" style="height: 64px;">
+                <div id="previous-operand" class="text-sm opacity-50"></div>
+                <div id="current-operand" class="text-xl font-bold"></div>
+            </div>
+            <button id="span-two" class="col-span-2 button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('AC')">AC</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('DEL')">DEL</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('/')">÷</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('1')">1</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('2')">2</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('3')">3</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('*')">×</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('4')">4</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('5')">5</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('6')">6</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('-')">-</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('7')">7</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('8')">8</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('9')">9</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('+')">+</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded col-span-2"
+                onclick="updateDisplay('0')">0</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('.')">.</button>
+            <button class="button bg-blue-500 hover:bg-blue-600 text-white rounded col-span-1"
+                onclick="compute()">=</button>
+        </div>
+
+        <script>
+            let previousOperandTextElement = document.querySelector('#previous-operand');
+            let currentOperandTextElement = document.querySelector('#current-operand');
+            let currentOperand = '';
+            let previousOperand = '';
+            let operation = undefined;
+
+            function updateDisplay(value) {
+                if (value === 'AC') {
+                    currentOperand = '';
+                    previousOperand = '';
+                    operation = undefined;
+                    updateScreen();
+                    return;
+                }
+                if (value === 'DEL') {
+                    currentOperand = currentOperand.toString().slice(0, -1);
+                    updateScreen();
+                    return;
+                }
+                if (value === '.' && currentOperand.includes('.')) return;
+                if (['+', '-', '*', '/'].includes(value)) {
+                    if (currentOperand === '') return;
+                    if (previousOperand !== '') {
+                        compute();
+                    }
+                    operation = value;
+                    previousOperand = currentOperand;
+                    currentOperand = '';
+                    updateScreen();
+                    return;
+                }
+                currentOperand = currentOperand.toString() + value.toString();
+                updateScreen();
+            }
+
+            function compute() {
+                let computation;
+                const prev = parseFloat(previousOperand);
+                const current = parseFloat(currentOperand);
+                if (isNaN(prev) || isNaN(current)) return;
+                switch (operation) {
+                    case '+':
+                        computation = prev + current;
+                        break;
+                    case '-':
+                        computation = prev - current;
+                        break;
+                    case '*':
+                        computation = prev * current;
+                        break;
+                    case '/':
+                        computation = prev / current;
+                        break;
+                    default:
+                        return;
+                }
+                currentOperand = computation;
+                operation = undefined;
+                previousOperand = '';
+                updateScreen();
+            }
+
+            function updateScreen() {
+                currentOperandTextElement.innerText = currentOperand;
+                if (operation != null) {
+                    previousOperandTextElement.innerText = `${previousOperand} ${operation}`;
+                } else {
+                    previousOperandTextElement.innerText = '';
+                }
+            }
+        </script>
+    </body>
+
+    </html>
+
+
+
+
+
+
+</div>
+
+<style>
+    .container {
+        border: 2px solid #3786f4;
+        border: 2px solid transparent;
+        position: absolute;
+    }
+
+    .drag-icon {
+        z-index: 1000;
+    }
+
+    .isCapturing {
+        cursor: crosshair !important;
+    }
+</style>
+
+<script>
+    fetch('计算器.json')
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById('container');
+            container.style.width = data.defaultWidth;
+            container.style.height = data.defaultHeight;
+        });
+
+    let MARGIN = 5;
+    var container = document.getElementById('container');
+    var dragIcon = document.querySelector('.drag-icon');
+    var isDragging = false;
+
+    dragIcon.addEventListener("mousedown", function (event) {
+        isDragging = true;
+        var startX = event.clientX;
+        var startY = event.clientY;
+        var origX = container.offsetLeft;
+        var origY = container.offsetTop;
+        var deltaX = startX - origX;
+        var deltaY = startY - origY;
+
+        function onMove(event) {
+            if (isDragging) {
+                var newX = event.clientX - deltaX;
+                var newY = event.clientY - deltaY;
+                container.style.left = newX + 'px';
+                container.style.top = newY + 'px';
+            }
+        }
+
+        function onUp() {
+            isDragging = false;
+            document.removeEventListener('mousemove', onMove);
+            document.removeEventListener('mouseup', onUp);
+        }
+
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+        event.preventDefault(); // 防止默认事件发生
+    });
+
+    container.addEventListener("mousedown", function (event) {
+        if (event.target.id === 'container') {
+            onMouseDown(event);
+        }
+    });
+    container.addEventListener("mousemove", function (event) {
+        if (event.target.id === 'container') {
+            onMouseMove(event);
+        }
+    });
+
+    function onMouseDown(event) {
+        var container = event.target;
+        var b = container.getBoundingClientRect();
+        var x = event.clientX - b.left;
+        var y = event.clientY - b.top;
+        let initialClientX = event.clientX;
+        let initialClientY = event.clientY;
+        var onTopEdge = y < MARGIN;
+        var onLeftEdge = x < MARGIN;
+        var onRightEdge = x >= b.width - MARGIN;
+        var onBottomEdge = y >= b.height - MARGIN;
+        var isResizing = onRightEdge || onLeftEdge || onTopEdge || onBottomEdge;
+
+        if (isResizing) {
+            function onMouseMoveResize(event) {
+                if (onRightEdge) {
+                    container.style.width = (event.clientX - b.left) + 'px';
+                }
+                if (onBottomEdge) {
+                    container.style.height = (event.clientY - b.top) + 'px';
+                }
+                if (onLeftEdge) {
+                    container.style.left = event.clientX + 'px';
+                    container.style.width = (initialClientX - event.clientX + b.width) + 'px';
+                }
+                if (onTopEdge) {
+                    container.style.top = event.clientY + 'px';
+                    container.style.height = (initialClientY - event.clientY + b.height) + 'px';
+                }
+            }
+
+            function onMouseUpResize() {
+                document.removeEventListener('mousemove', onMouseMoveResize);
+                document.removeEventListener('mouseup', onMouseUpResize);
+            }
+
+            document.addEventListener('mousemove', onMouseMoveResize);
+            document.addEventListener('mouseup', onMouseUpResize);
+        }
+    }
+
+    function onMouseMove(event) {
+        var container = event.target;
+        var b = container.getBoundingClientRect();
+        var x = event.clientX - b.left;
+        var y = event.clientY - b.top;
+        var onTopEdge = y < MARGIN;
+        var onLeftEdge = x < MARGIN;
+        var onRightEdge = x >= b.width - MARGIN;
+        var onBottomEdge = y >= b.height - MARGIN;
+
+        if (onRightEdge && onBottomEdge || onLeftEdge && onTopEdge) {
+            container.style.cursor = 'nwse-resize';
+        } else if (onRightEdge && onTopEdge || onBottomEdge && onLeftEdge) {
+            container.style.cursor = 'nesw-resize';
+        } else if (onRightEdge || onLeftEdge) {
+            container.style.cursor = 'ew-resize';
+        } else if (onBottomEdge || onTopEdge) {
+            container.style.cursor = 'ns-resize';
+        } else {
+            container.style.cursor = 'move';
+        }
+    }
+</script>
+
+
+
+<textarea id="selectedElementName"
+    style="position: fixed; right: 16px; bottom: 16px; resize: all; width: calc(100% - 32px); height: 120px;"></textarea>
+<script src="https://code.iconify.design/2/2.2.1/iconify.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const captureButton = document.createElement('button');
+        captureButton.textContent = '捕获元素';
+        captureButton.style.position = 'fixed';
+        captureButton.style.right = '16px';
+        captureButton.style.top = '16px';
+        document.body.appendChild(captureButton);
+
+        let selectedElements = []; // 存储选中的元素
+        let lastHighlightedElement = null; // 存储上一个高亮的元素
+        let isCapturing = false; // 标记是否处于捕获模式
+
+        captureButton.addEventListener('click', function () {
+            if (!isCapturing) {
+                captureButton.textContent = '退出捕获';
+                document.addEventListener('mouseover', highlightElement);
+                document.addEventListener('mouseout', removeHighlight);
+                document.addEventListener('click', selectElement, true);
+                isCapturing = true;
+                document.querySelectorAll('*').forEach(el => {
+                    el.classList.add('isCapturing');
+                });
+            } else {
+                exitCaptureMode();
+            }
+        });
+
+        function highlightElement(event) {
+            if (event.target === captureButton) return; // 忽略按钮本身
+            if (lastHighlightedElement) {
+                removeHighlight({ target: lastHighlightedElement });
+            }
+            event.target.style.outline = '2px solid magenta'; // 将颜色改为品红色
+            lastHighlightedElement = event.target;
+        }
+
+        function removeHighlight(event) {
+            if (!selectedElements.includes(event.target)) {
+                event.target.style.outline = '';
+            }
+        }
+
+        function selectElement(event) {
+            if (event.target === captureButton) return; // 忽略按钮本身
+            if (event.shiftKey) {
+                const targetElement = event.target;
+                if (!selectedElements.includes(targetElement)) {
+                    targetElement.style.outline = '2px solid magenta'; // 将颜色改为品红色
+                    selectedElements.push(targetElement);
+                }
+            } else {
+                if (!selectedElements.includes(event.target)) {
+                    selectedElements.forEach(element => element.style.outline = '');
+                    selectedElements = [];
+                    event.target.style.outline = '2px solid magenta'; // 将颜色改为品红色
+                    selectedElements.push(event.target);
+                }
+            }
+            updateSelectedElementsDisplay();
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        function updateSelectedElementsDisplay() {
+            const formattedElements = selectedElements.map(element => {
+                const elementTagName = element.tagName.toLowerCase();
+                const elementId = element.id ? ` id="${element.id}"` : '';
+                const elementClasses = element.className ? ` class="${element.className}"` : '';
+                return `<${elementTagName}${elementId}${elementClasses}></${elementTagName}>`;
+            }).join('\n');
+
+            document.getElementById('selectedElementName').value = formattedElements;
+        }
+
+        function exitCaptureMode() {
+            captureButton.textContent = '捕获元素';
+            document.removeEventListener('mouseover', highlightElement);
+            document.removeEventListener('mouseout', removeHighlight);
+            document.removeEventListener('click', selectElement, true);
+            isCapturing = false;
+            document.querySelectorAll('*').forEach(el => {
+                el.classList.remove('isCapturing');
+            });
+            selectedElements.forEach(element => element.style.outline = ''); // 退出捕获后清除之前的被选中样式
+            selectedElements = []; // 清空选中元素数组
+            document.getElementById('selectedElementName').value = ''; // 清除textarea中的内容
+        }
+    });
+</script>

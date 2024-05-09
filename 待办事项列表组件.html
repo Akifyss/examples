@@ -1,0 +1,431 @@
+<script src="https://code.iconify.design/2/2.2.1/iconify.min.js"></script>
+
+<div id="container" class="container" style="left:50px; top: 50px">
+    <span class="iconify drag-icon" data-icon="grommet-icons:drag"
+        style="position: absolute; left: -16px; top: -16px; cursor: move;"></span>
+
+    <!-- 设计一个待办事项列表组件，允许添加新的待办事项，并为任务指定优先级。用户可以通过勾选旁边的单选框来标记任务为已完成，这些任务在视觉上将与未完成的任务区分开。此外，用户可以随时删除任何不再需要的任务。该组件还支持用户在任务节点处重新编辑该任务的名称和优先级。 -->
+
+
+    <!DOCTYPE html>
+    <html lang="zh-CN">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>待办事项列表组件</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
+        <style>
+            body {
+                font-family: 'Inter', sans-serif;
+            }
+
+            .input-group {
+                position: relative;
+            }
+
+            .add-btn {
+                position: absolute;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                border: none;
+                background: none;
+                z-index: 10;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0 12px;
+            }
+
+            .task-input {
+                padding-right: 50px !important;
+            }
+
+            .task-checkbox {
+                cursor: pointer;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .task-checkbox iconify-icon {
+                font-size: 24px;
+                color: #4984ee;
+            }
+
+            .delete-task {
+                cursor: pointer;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .delete-task iconify-icon {
+                font-size: 24px;
+                color: #e24f62;
+            }
+
+            .priority-select {
+                appearance: none;
+                padding-right: 30px !important;
+                background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="black"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>');
+                background-repeat: no-repeat;
+                background-position: right 10px center;
+                background-size: 16px 16px;
+            }
+        </style>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+        <div id="todoApp" class="flex flex-col items-center p-4"
+            style="width: 100%; height: 100%; margin:0!important; max-width:none!important; min-width:none!important; max-height:none!important; min-height:none!important; position:static!important;">
+            <div id="formSection" class="w-full">
+                <div class="input-group">
+                    <input id="taskInput" type="text" placeholder="添加新任务..."
+                        class="task-input w-full p-2 border rounded-t-lg" autofocus>
+                    <button class="add-btn">
+                        <iconify-icon icon="akar-icons:circle-plus-fill"
+                            style="color: #5ec16a; font-size: 24px;"></iconify-icon>
+                    </button>
+                </div>
+                <select id="prioritySelect" class="priority-select w-full p-2 border-t-0 border rounded-b-lg">
+                    <option value="Low">低优先级</option>
+                    <option value="Medium">中优先级</option>
+                    <option value="High">高优先级</option>
+                </select>
+            </div>
+            <ul id="taskList" class="w-full mt-4"></ul>
+        </div>
+
+        <script>
+            const taskInput = document.getElementById('taskInput');
+            const prioritySelect = document.getElementById('prioritySelect');
+            const taskList = document.getElementById('taskList');
+            const addButton = document.querySelector('.add-btn');
+            const storageKey = 'todoTasks';
+
+            const loadTasks = () => {
+                const tasks = JSON.parse(localStorage.getItem(storageKey)) || [];
+                if (tasks.length === 0) {
+                    // 在初始状态下添加一个示例任务
+                    tasks.push({ text: '示例任务', priority: 'Medium', completed: false });
+                }
+                tasks.forEach(task => addTask(task.text, task.priority, task.completed));
+            };
+
+            const saveTasks = () => {
+                const tasks = [];
+                taskList.querySelectorAll('li').forEach(li => {
+                    tasks.push({
+                        text: li.querySelector('.task-content').textContent,
+                        priority: li.querySelector('.task-priority').value,
+                        completed: li.querySelector('.task-checkbox input').checked
+                    });
+                });
+                localStorage.setItem(storageKey, JSON.stringify(tasks));
+            };
+
+            const addTask = (task, priority, completed = false) => {
+                const li = document.createElement('li');
+                li.className = 'flex items-center justify-between p-2 mt-1 border rounded';
+                li.innerHTML = `
+                        <div class="flex items-center">
+                            <button class="task-checkbox mr-2">
+                                <iconify-icon icon="${completed ? 'akar-icons:circle-check-fill' : 'akar-icons:circle'}"></iconify-icon>
+                            </button>
+                            <span class="task-content" contenteditable="true">${task}</span>
+                        </div>
+                        <div class="flex items-center">
+                            <select class="task-priority border p-1 rounded">
+                                <option value="Low" ${priority === 'Low' ? 'selected' : ''}>低</option>
+                                <option value="Medium" ${priority === 'Medium' ? 'selected' : ''}>中</option>
+                                <option value="High" ${priority === 'High' ? 'selected' : ''}>高</option>
+                            </select>
+                            <button class="delete-task ml-2">
+                                <iconify-icon icon="akar-icons:circle-x-fill"></iconify-icon>
+                            </button>
+                        </div>
+                    `;
+
+                taskList.appendChild(li);
+
+                // Event listener for marking task as completed
+                const checkboxButton = li.querySelector('.task-checkbox');
+                checkboxButton.addEventListener('click', () => {
+                    const iconify = checkboxButton.querySelector('iconify-icon');
+                    const isChecked = iconify.icon === 'akar-icons:circle';
+                    iconify.icon = isChecked ? 'akar-icons:circle-check-fill' : 'akar-icons:circle';
+                    li.querySelector('.task-content').style.textDecoration = isChecked ? 'line-through' : 'none';
+                    saveTasks();
+                });
+
+                // Event listener for deleting a task
+                const deleteButton = li.querySelector('.delete-task');
+                deleteButton.addEventListener('click', () => {
+                    taskList.removeChild(li);
+                    saveTasks();
+                });
+
+                saveTasks();
+            };
+
+            addButton.addEventListener('click', () => {
+                if (taskInput.value.trim() !== '') {
+                    addTask(taskInput.value.trim(), prioritySelect.value);
+                    taskInput.value = ''; // Clear input field after adding task
+                    saveTasks();
+                }
+            });
+
+            taskInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && taskInput.value.trim() !== '') {
+                    addTask(taskInput.value.trim(), prioritySelect.value);
+                    taskInput.value = ''; // Clear input field after adding task
+                    saveTasks();
+                }
+            });
+
+            loadTasks();
+        </script>
+    </body>
+
+    </html>
+
+
+</div>
+
+<style>
+    .container {
+        border: 2px solid #3786f4;
+
+        position: absolute;
+    }
+
+    .drag-icon {
+        z-index: 1000;
+    }
+
+    .isCapturing {
+        cursor: crosshair !important;
+    }
+</style>
+
+<script>
+    fetch('待办事项列表组件.json')
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById('container');
+            container.style.width = data.defaultWidth;
+            container.style.height = data.defaultHeight;
+        });
+
+    let MARGIN = 5;
+    var container = document.getElementById('container');
+    var dragIcon = document.querySelector('.drag-icon');
+    var isDragging = false;
+
+    dragIcon.addEventListener("mousedown", function (event) {
+        isDragging = true;
+        var startX = event.clientX;
+        var startY = event.clientY;
+        var origX = container.offsetLeft;
+        var origY = container.offsetTop;
+        var deltaX = startX - origX;
+        var deltaY = startY - origY;
+
+        function onMove(event) {
+            if (isDragging) {
+                var newX = event.clientX - deltaX;
+                var newY = event.clientY - deltaY;
+                container.style.left = newX + 'px';
+                container.style.top = newY + 'px';
+            }
+        }
+
+        function onUp() {
+            isDragging = false;
+            document.removeEventListener('mousemove', onMove);
+            document.removeEventListener('mouseup', onUp);
+        }
+
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+        event.preventDefault(); // 防止默认事件发生
+    });
+
+    container.addEventListener("mousedown", function (event) {
+        if (event.target.id === 'container') {
+            onMouseDown(event);
+        }
+    });
+    container.addEventListener("mousemove", function (event) {
+        if (event.target.id === 'container') {
+            onMouseMove(event);
+        }
+    });
+
+    function onMouseDown(event) {
+        var container = event.target;
+        var b = container.getBoundingClientRect();
+        var x = event.clientX - b.left;
+        var y = event.clientY - b.top;
+        let initialClientX = event.clientX;
+        let initialClientY = event.clientY;
+        var onTopEdge = y < MARGIN;
+        var onLeftEdge = x < MARGIN;
+        var onRightEdge = x >= b.width - MARGIN;
+        var onBottomEdge = y >= b.height - MARGIN;
+        var isResizing = onRightEdge || onLeftEdge || onTopEdge || onBottomEdge;
+
+        if (isResizing) {
+            function onMouseMoveResize(event) {
+                if (onRightEdge) {
+                    container.style.width = (event.clientX - b.left) + 'px';
+                }
+                if (onBottomEdge) {
+                    container.style.height = (event.clientY - b.top) + 'px';
+                }
+                if (onLeftEdge) {
+                    container.style.left = event.clientX + 'px';
+                    container.style.width = (initialClientX - event.clientX + b.width) + 'px';
+                }
+                if (onTopEdge) {
+                    container.style.top = event.clientY + 'px';
+                    container.style.height = (initialClientY - event.clientY + b.height) + 'px';
+                }
+            }
+
+            function onMouseUpResize() {
+                document.removeEventListener('mousemove', onMouseMoveResize);
+                document.removeEventListener('mouseup', onMouseUpResize);
+            }
+
+            document.addEventListener('mousemove', onMouseMoveResize);
+            document.addEventListener('mouseup', onMouseUpResize);
+        }
+    }
+
+    function onMouseMove(event) {
+        var container = event.target;
+        var b = container.getBoundingClientRect();
+        var x = event.clientX - b.left;
+        var y = event.clientY - b.top;
+        var onTopEdge = y < MARGIN;
+        var onLeftEdge = x < MARGIN;
+        var onRightEdge = x >= b.width - MARGIN;
+        var onBottomEdge = y >= b.height - MARGIN;
+
+        if (onRightEdge && onBottomEdge || onLeftEdge && onTopEdge) {
+            container.style.cursor = 'nwse-resize';
+        } else if (onRightEdge && onTopEdge || onBottomEdge && onLeftEdge) {
+            container.style.cursor = 'nesw-resize';
+        } else if (onRightEdge || onLeftEdge) {
+            container.style.cursor = 'ew-resize';
+        } else if (onBottomEdge || onTopEdge) {
+            container.style.cursor = 'ns-resize';
+        } else {
+            container.style.cursor = 'move';
+        }
+    }
+</script>
+
+
+
+<textarea id="selectedElementName"
+    style="position: fixed; right: 16px; bottom: 16px; resize: all; width: calc(100% - 32px); height: 120px;"></textarea>
+<script src="https://code.iconify.design/2/2.2.1/iconify.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const captureButton = document.createElement('button');
+        captureButton.textContent = '捕获元素';
+        captureButton.style.position = 'fixed';
+        captureButton.style.right = '16px';
+        captureButton.style.top = '16px';
+        document.body.appendChild(captureButton);
+
+        let selectedElements = []; // 存储选中的元素
+        let lastHighlightedElement = null; // 存储上一个高亮的元素
+        let isCapturing = false; // 标记是否处于捕获模式
+
+        captureButton.addEventListener('click', function () {
+            if (!isCapturing) {
+                captureButton.textContent = '退出捕获';
+                document.addEventListener('mouseover', highlightElement);
+                document.addEventListener('mouseout', removeHighlight);
+                document.addEventListener('click', selectElement, true);
+                isCapturing = true;
+                document.querySelectorAll('*').forEach(el => {
+                    el.classList.add('isCapturing');
+                });
+            } else {
+                exitCaptureMode();
+            }
+        });
+
+        function highlightElement(event) {
+            if (event.target === captureButton) return; // 忽略按钮本身
+            if (lastHighlightedElement) {
+                removeHighlight({ target: lastHighlightedElement });
+            }
+            event.target.style.outline = '2px solid magenta'; // 将颜色改为品红色
+            lastHighlightedElement = event.target;
+        }
+
+        function removeHighlight(event) {
+            if (!selectedElements.includes(event.target)) {
+                event.target.style.outline = '';
+            }
+        }
+
+        function selectElement(event) {
+            if (event.target === captureButton) return; // 忽略按钮本身
+            if (event.shiftKey) {
+                const targetElement = event.target;
+                if (!selectedElements.includes(targetElement)) {
+                    targetElement.style.outline = '2px solid magenta'; // 将颜色改为品红色
+                    selectedElements.push(targetElement);
+                }
+            } else {
+                if (!selectedElements.includes(event.target)) {
+                    selectedElements.forEach(element => element.style.outline = '');
+                    selectedElements = [];
+                    event.target.style.outline = '2px solid magenta'; // 将颜色改为品红色
+                    selectedElements.push(event.target);
+                }
+            }
+            updateSelectedElementsDisplay();
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        function updateSelectedElementsDisplay() {
+            const formattedElements = selectedElements.map(element => {
+                const elementTagName = element.tagName.toLowerCase();
+                const elementId = element.id ? ` id="${element.id}"` : '';
+                const elementClasses = element.className ? ` class="${element.className}"` : '';
+                return `<${elementTagName}${elementId}${elementClasses}></${elementTagName}>`;
+            }).join('\n');
+
+            document.getElementById('selectedElementName').value = formattedElements;
+        }
+
+        function exitCaptureMode() {
+            captureButton.textContent = '捕获元素';
+            document.removeEventListener('mouseover', highlightElement);
+            document.removeEventListener('mouseout', removeHighlight);
+            document.removeEventListener('click', selectElement, true);
+            isCapturing = false;
+            document.querySelectorAll('*').forEach(el => {
+                el.classList.remove('isCapturing');
+            });
+            selectedElements.forEach(element => element.style.outline = ''); // 退出捕获后清除之前的被选中样式
+            selectedElements = []; // 清空选中元素数组
+            document.getElementById('selectedElementName').value = ''; // 清除textarea中的内容
+        }
+    });
+</script>

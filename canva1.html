@@ -1,0 +1,104 @@
+<div class="resizable-container" style="position: relative; border: 2px solid black;">
+    <div style="position: absolute; right: 0; bottom: 0; cursor: nwse-resize; width: 10px; height: 10px; background-color: red;"></div>
+
+    <!DOCTYPE html>
+    <html lang="zh">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Button UI</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+            :root {
+                --defaultWidth: 200px;
+                --defaultHeight: 50px;
+                --uiWidth: var(--defaultWidth);
+                --uiHeight: var(--defaultHeight);
+            }
+            #buttonUI {
+                width: var(--uiWidth);
+                height: var(--uiHeight);
+                text-align: center;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            #mainButton {
+                width: 100%;
+                height: 100%;
+                background-color: #1e40af; /* Indigo */
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-size: 16px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+            #mainButton:hover {
+                background-color: #312e81;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="buttonUI">
+            <button id="mainButton">点击我</button>
+        </div>
+
+        <script>
+            document.getElementById('mainButton').addEventListener('click', function() {
+                alert('按钮被点击了!');
+            });
+        </script>
+    </body>
+    </html>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const resizableContainer = document.querySelector('.resizable-container');
+        const resizeHandle = resizableContainer.querySelector('div');
+
+        let isResizing = false;
+
+        fetch('size.json')
+        .then(response => response.json())
+        .then(data => {
+            const defaultWidth = data.defaultWidth;
+            const defaultHeight = data.defaultHeight;
+            const container = document.getElementById('container');
+            container.style.width = defaultWidth;
+            container.style.height = defaultHeight;
+            document.documentElement.style.setProperty('--defaultWidth', defaultWidth);
+            document.documentElement.style.setProperty('--defaultHeight', defaultHeight);
+        });
+
+        resizeHandle.addEventListener('mousedown', function(event) {
+            isResizing = true;
+            let startX = event.clientX;
+            let startY = event.clientY;
+            let startWidth = parseInt(document.defaultView.getComputedStyle(resizableContainer).width, 10);
+            let startHeight = parseInt(document.defaultView.getComputedStyle(resizableContainer).height, 10);
+
+            function doResize(event) {
+                if (isResizing) {
+                    let width = startWidth + event.clientX - startX;
+                    let height = startHeight + event.clientY - startY;
+                    resizableContainer.style.width = `${width}px`;
+                    resizableContainer.style.height = `${height}px`;
+                }
+            }
+
+            function stopResize() {
+                isResizing = false;
+                window.removeEventListener('mousemove', doResize);
+                window.removeEventListener('mouseup', stopResize);
+            }
+
+            window.addEventListener('mousemove', doResize);
+            window.addEventListener('mouseup', stopResize);
+
+            event.preventDefault();
+        });
+    });
+</script>

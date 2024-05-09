@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>画板</title>
+  <style>
+    :root {
+      --defaultWidth: 800px;
+      --defaultHeight: 600px;
+      --uiWidth: 100%;
+      --uiHeight: 100%;
+    }
+
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #canvas-container {
+      width: var(--uiWidth);
+      height: var(--uiHeight);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #drawingCanvas {
+      width: 100%;
+      height: calc(100% - 50px);
+      background: white;
+      border: 1px solid #ccc;
+      cursor: crosshair;
+    }
+
+    #toolbar {
+      width: 100%;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #efefef;
+      border-bottom: 1px solid #cecece;
+      padding: 8px;
+    }
+
+    .tool-item {
+      margin: 0 10px;
+      height: 34px;
+    }
+
+    #clearBtn {
+      background-color: #ef4444;
+      color: white;
+      border-radius: 8px;
+      padding: 0 15px;
+    }
+
+    #brushSize {
+      border-radius: 8px;
+      padding: 0 10px;
+    }
+
+    #colorPicker {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
+</head>
+
+<body>
+  <div id="canvas-container">
+    <div id="toolbar">
+      <button id="clearBtn" class="tool-item">清空</button>
+      <select id="brushSize" class="tool-item">
+        <option value="2">细笔</option>
+        <option value="5" selected>中笔</option>
+        <option value="10">粗笔</option>
+      </select>
+      <input type="color" id="colorPicker" class="tool-item">
+    </div>
+    <canvas id="drawingCanvas"></canvas>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('drawingCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+
+    let painting = false;
+    let brushSize = 5;
+    let color = '#000000';
+
+    function startPosition(e) {
+      painting = true;
+      draw(e);
+    }
+
+    function finishedPosition() {
+      painting = false;
+      ctx.beginPath();
+    }
+
+    function draw(e) {
+      if (!painting) return;
+      ctx.lineWidth = brushSize;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = color;
+
+      ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+    }
+
+    canvas.addEventListener('mousedown', startPosition);
+    canvas.addEventListener('mouseup', finishedPosition);
+    canvas.addEventListener('mousemove', draw);
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    });
+
+    document.getElementById('brushSize').addEventListener('change', function () {
+      brushSize = this.value;
+    });
+
+    document.getElementById('colorPicker').addEventListener('input', function () {
+      color = this.value;
+    });
+  </script>
+</body>
+
+</html>

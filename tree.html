@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tree Component</title>
+    <style>
+        .tree {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.5;
+        }
+
+        .tree-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .tree-item label {
+            margin-left: 5px;
+        }
+
+        .tree-item input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 5px;
+            background-color: #555;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="tree">
+        <div class="tree-item">
+            <input type="checkbox" id="item1">
+            <div class="icon"></div>
+            <label for="item1">Item 1</label>
+            <div class="tree">
+                <div class="tree-item">
+                    <input type="checkbox" id="subitem1-1">
+                    <div class="icon"></div>
+                    <label for="subitem1-1">Sub Item 1-1</label>
+                </div>
+                <div class="tree-item">
+                    <input type="checkbox" id="subitem1-2">
+                    <div class="icon"></div>
+                    <label for="subitem1-2">Sub Item 1-2</label>
+                </div>
+            </div>
+        </div>
+        <div class="tree-item">
+            <input type="checkbox" id="item2">
+            <div class="icon"></div>
+            <label for="item2">Item 2</label>
+            <div class="tree">
+                <div class="tree-item">
+                    <input type="checkbox" id="subitem2-1">
+                    <div class="icon"></div>
+                    <label for="subitem2-1">Sub Item 2-1</label>
+                </div>
+            </div>
+        </div>
+        <div class="tree-item">
+            <input type="checkbox" id="item3">
+            <div class="icon"></div>
+            <label for="item3">Item 3</label>
+            <!-- Add additional tree items here -->
+        </div>
+    </div>
+</body>
+
+</html>

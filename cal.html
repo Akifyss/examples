@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>交互式日历组件</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@iconify/iconify@1.0.7/dist/iconify.min.js"></script>
+    <script src="https://unpkg.com/chinese-lunar"></script>
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+SC&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            display: flex;
+            justify-content: center;
+            padding-top: 20px;
+        }
+
+        .calendar-cell:not(.not-current-month) {
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 70px;
+        }
+
+        .calendar-cell.selected {
+            background-color: #fecaca;
+        }
+
+        .calendar-cell.today {
+            border: 2px solid #f87171;
+        }
+
+        .lunar-date {
+            font-size: 0.75rem;
+            color: #71717a;
+            margin-top: 4px;
+        }
+
+        #todoPanel {
+            background-color: #f3f4f6;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            max-height: 90vh;
+            position: absolute;
+            left: 0;
+            top: 20px;
+        }
+
+        .todo-item {
+            background-color: white;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .delete-todo {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+
+        .add-todo {
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+            cursor: pointer;
+            color: #10b981;
+            border: 2px dashed #10b981;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-todo:hover {
+            background-color: #a7f3d0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="todoPanel">
+        <h3 class="text-lg font-semibold">待办事项</h3>
+        <div id="todoItems" class="mt-4">
+            <!-- Todo items will be added here dynamically -->
+        </div>
+        <div class="add-todo mt-4" onclick="addTodo()">+ 新增待办</div>
+    </div>
+    <div id="calendar" class="bg-white shadow rounded-lg p-4" style="width: 600px; margin-left: 60px;">
+        <div class="flex justify-between items-center mb-4">
+            <button id="prevMonth" class="hover:text-gray-500">
+                <span class="iconify" data-icon="mdi:chevron-left"></span>
+            </button>
+            <h2 id="currentMonth" class="text-xl font-semibold">加载中...</h2>
+            <button id="nextMonth" class="hover:text-gray-500">
+                <span class="iconify" data-icon="mdi:chevron-right"></span>
+            </button>
+        </div>
+        <div class="grid grid-cols-7 gap-4 text-center mb-4">
+            <div>周一</div>
+            <div>周二</div>
+            <div>周三</div>
+            <div>周四</div>
+            <div>周五</div>
+            <div>周六</div>
+            <div>周日</div>
+        </div>
+        <div class="grid grid-cols-7 gap-4 text-center">
+            <!-- Calendar cells will be generated here -->
+        </div>
+    </div>
+
+    <script>
+        const now = new Date();
+        let currentMonth = now.getMonth();
+        let currentYear = now.getFullYear();
+        let selectedDay = null;
+
+        const getLunarDate = (date) => {
+            const lunar = chineseLunar.solarToLunar(date);
+            return chineseLunar.format(lunar, 'Md');
+        };
+
+        const updateCalendarHeader = () => {
+            const monthNames = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
+            const header = `${currentYear} 年 ${monthNames[currentMonth]}`;
+            document.getElementById('currentMonth').innerText = header;
+        };
+
+        const updateCalendar = () => {
+            updateCalendarHeader();
+            const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const calendarGrid = document.querySelector('#calendar .grid.grid-cols-7:last-child');
+            calendarGrid.innerHTML = ''; // Clear existing cells
+
+            // Adjust firstDayOfMonth to match Monday as the first day of the week
+            const adjustedFirstDay = (firstDayOfMonth + 6) % 7;
+
+            // Add cells for current month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const cell = document.createElement('div');
+                cell.classList.add('calendar-cell');
+                const solarDateSpan = document.createElement('span');
+                solarDateSpan.innerText = day;
+                cell.appendChild(solarDateSpan);
+                const lunarSpan = document.createElement('span');
+                lunarSpan.classList.add('lunar-date');
+                const lunarDate = getLunarDate(new Date(currentYear, currentMonth, day));
+                lunarSpan.innerText = lunarDate; // Displaying the lunar date
+                cell.appendChild(lunarSpan);
+
+                if (day === now.getDate() && currentMonth === now.getMonth() && currentYear === now.getFullYear()) {
+                    cell.classList.add('today');
+                }
+
+                cell.addEventListener('click', function() {
+                    document.querySelectorAll('.calendar-cell').forEach(c => c.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedDay = new Date(currentYear, currentMonth, day);
+                    showTodosForSelectedDay(selectedDay);
+                });
+
+                calendarGrid.appendChild(cell);
+            }
+
+            document.getElementById('prevMonth').addEventListener('click', () => {
+                currentMonth--;
+                if (currentMonth < 0) {
+                    currentMonth = 11;
+                    currentYear--;
+                }
+                updateCalendar();
+            });
+
+            document.getElementById('nextMonth').addEventListener('click', () => {
+                currentMonth++;
+                if (currentMonth > 11) {
+                    currentMonth = 0;
+                    currentYear++;
+                }
+                updateCalendar();
+            });
+        };
+
+        // Initial calendar setup
+        updateCalendar();
+
+        let todoId = 0; // Global ID for each todo, to help with deletion
+
+        function addTodo() {
+            const todoItems = document.getElementById('todoItems');
+            const newItem = document.createElement('div');
+            newItem.classList.add('todo-item');
+            newItem.setAttribute('id', `todo-${todoId}`);
+            const taskName = `任务 ${Math.floor(Math.random() * 100)}`;
+            newItem.innerHTML = `
+<h4 class="font-semibold">${taskName}</h4>
+<p>描述：完成设计稿的审查。</p>
+<p>负责人：${['Alice', 'Bob', 'Carol'][Math.floor(Math.random() * 3)]}</p>
+<span class="iconify delete-todo" data-icon="mdi:close-circle" onclick="deleteTodo(${todoId})"></span>
+            `;
+            todoItems.appendChild(newItem);
+            saveTodoToLocalStorage(todoId++, taskName, selectedDay);
+        }
+
+        function deleteTodo(todoId) {
+            const todoItem = document.getElementById(`todo-${todoId}`);
+            todoItem.remove();
+            removeTodoFromLocalStorage(todoId);
+        }
+
+        function saveTodoToLocalStorage(todoId, taskName, date) {
+            const todos = JSON.parse(localStorage.getItem('todos')) || [];
+            todos.push({ id: todoId, name: taskName, date: date.toISOString().split('T')[0] });
+            localStorage.setItem('todos', JSON.stringify(todos));
+        }
+
+        function removeTodoFromLocalStorage(todoId) {
+            let todos = JSON.parse(localStorage.getItem('todos')) || [];
+            todos = todos.filter(todo => todo.id !== todoId);
+            localStorage.setItem('todos', JSON.stringify(todos));
+        }
+
+        function showTodosForSelectedDay(date) {
+            const todos = JSON.parse(localStorage.getItem('todos')) || [];
+            const filteredTodos = todos.filter(todo => todo.date === date.toISOString().split('T')[0]);
+            const todoItems = document.getElementById('todoItems');
+            todoItems.innerHTML = ''; // Clear existing todos
+            filteredTodos.forEach(todo => {
+                const newItem = document.createElement('div');
+                newItem.classList.add('todo-item');
+                newItem.setAttribute('id', `todo-${todo.id}`);
+                newItem.innerHTML = `
+<h4 class="font-semibold">${todo.name}</h4>
+<p>描述：完成设计稿的审查。</p>
+<p>负责人：${['Alice', 'Bob', 'Carol'][Math.floor(Math.random() * 3)]}</p>
+<span class="iconify delete-todo" data-icon="mdi:close-circle" onclick="deleteTodo(${todo.id})"></span>
+                `;
+                todoItems.appendChild(newItem);
+            });
+        }
+    </script>
+</body>
+
+</html>

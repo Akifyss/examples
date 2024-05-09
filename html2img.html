@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML to Image Demo</title>
+    <script src="https://unpkg.com/html-to-image"></script>
+</head>
+<body>
+
+<div id="content-to-capture" style="padding: 20px; background-color: #f0f0f0;">
+    <h2>Hello, html-to-image!</h2>
+    <p>This is a simple demo to convert this HTML segment into an image and download it.</p>
+</div>
+
+<button id="download-btn">Download as Image</button>
+
+<script>
+    document.getElementById('download-btn').addEventListener('click', function() {
+        var node = document.getElementById('content-to-capture');
+
+        htmlToImage.toPng(node)
+            .then(function (dataUrl) {
+                // Create a link and set the URL as the href
+                var link = document.createElement('a');
+                link.download = 'html-capture.png';
+                link.href = dataUrl;
+                // Append the link to the body
+                document.body.appendChild(link);
+                // Trigger the download
+                link.click();
+                // Clean up
+                document.body.removeChild(link);
+            })
+            .catch(function (error) {
+                console.error('Oops, something went wrong!', error);
+            });
+    });
+</script>
+
+</body>
+</html>

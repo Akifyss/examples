@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Command Panel UI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .suggestions {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .input-container {
+            margin-bottom: 1rem;
+        }
+
+        .suggestion-item {
+            padding: 0.5rem;
+            border-radius: 6px;
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .suggestion-item:hover {
+            background-color: #f3f3f3;
+            cursor: pointer;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(0, 0, 0, 0.3);
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            box-sizing: border-box;
+        }
+
+        .command-panel-container {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 0.5rem;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+
+        .suggestion-item:first-of-type {
+            background-color: #f3f3f3;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100">
+    <div class="flex flex-col items-center justify-center h-screen">
+        <div class="command-panel-container">
+            <div class="input-container">
+                <input id="commandInput" class="input-field" type="text" placeholder="请输入命令..."
+                    oninput="if (/^[\u4e00-\u9fa5]*$/.test(this.value) || this.value === '') updateSuggestions()">
+            </div>
+            <div class="suggestions">
+                <ul id="suggestionsList">
+                    <!-- Suggestions will go here -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const defaultSuggestions = [
+            "Suggestion 1",
+            "Suggestion 2",
+            "Suggestion 3"
+        ];
+
+        let suggestionTimeout;
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function showDefaultSuggestions() {
+            const suggestionsList = document.getElementById('suggestionsList');
+            suggestionsList.innerHTML = ''; // Clear current suggestions
+
+            defaultSuggestions.forEach(suggestion => {
+                const li = document.createElement('li');
+                li.className = 'suggestion-item';
+                li.textContent = suggestion;
+                suggestionsList.appendChild(li);
+            });
+        }
+
+        function updateSuggestions() {
+            const input = document.getElementById('commandInput').value;
+            const suggestionsList = document.getElementById('suggestionsList');
+            clearTimeout(suggestionTimeout); // Clear the previous timeout
+
+            if (input.trim() === '') {
+                showDefaultSuggestions();
+                return; // No input, show default suggestions
+            }
+
+            suggestionTimeout = setTimeout(() => {
+                suggestionsList.innerHTML = ''; // Clear current suggestions
+
+                // Mock suggestions based on input, for demonstration purposes
+                const suggestions = [
+                    `Suggestion for "${input}" 1`,
+                    `Suggestion for "${input}" 2`,
+                    `Suggestion for "${input}" 3`
+                ];
+
+                // Randomize the number of suggestions to show
+                const numberOfSuggestionsToShow = getRandomInt(1, suggestions.length);
+
+                for (let i = 0; i < numberOfSuggestionsToShow; i++) {
+                    const li = document.createElement('li');
+                    li.className = 'suggestion-item';
+                    li.textContent = suggestions[i];
+                    suggestionsList.appendChild(li);
+                }
+            }, 500); // 200ms delay before showing suggestions
+        }
+
+        // Initialize with default suggestions
+        showDefaultSuggestions();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>框选动画输入框</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            cursor: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='26' height='28' fill='none' viewBox='0 0 26 28'%3e%3cg filter='url(%23a)'%3e%3cpath fill='black' d='M9.86 4.916 8.09 1.854l-1.207-.323-.324 1.207L8.328 5.8l1.531-.884Zm2.177-3.298 1.207.323-.647 2.415-1.207-.324.647-2.414Zm3.212 7.33 2.415.648-.324 1.207-2.415-.647.324-1.207Zm2.178-3.298.323-1.207-1.207-.324-3.062 1.768.884 1.53 3.062-1.767Zm-13.045.387 2.415.647-.323 1.207-2.415-.647.323-1.207Zm4.743 6.447 1.208.324-.647 2.415-1.208-.324.647-2.415Zm-4.83-1.294-.323 1.208 1.208.323 3.061-1.768-.883-1.53-3.062 1.767Zm16.3 10.555L11.812 6.529a.94.94 0 0 0-1.281-.343l-1.438.83a.94.94 0 0 0-.343 1.28l8.785 15.217a.94.94 0 0 0 1.28.343l1.438-.83a.94.94 0 0 0 .344-1.281Zm-8.29-9.056-2.65-4.592 1.53-.884 2.652 4.593-1.53.883Z'/%3e%3c/g%3e%3cdefs%3e%3cfilter id='a' width='20.748' height='26.45' x='1.972' y='1.531' color-interpolation-filters='sRGB' filterUnits='userSpaceOnUse'%3e%3cfeFlood flood-opacity='0' result='BackgroundImageFix'/%3e%3cfeColorMatrix in='SourceAlpha' result='hardAlpha' type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0'/%3e%3cfeOffset dy='2'/%3e%3cfeGaussianBlur stdDeviation='1'/%3e%3cfeComposite in2='hardAlpha' operator='out'/%3e%3cfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0'/%3e%3cfeBlend in2='BackgroundImageFix' mode='normal' result='effect1_dropShadow_4229_6'/%3e%3cfeBlend in='SourceGraphic' in2='effect1_dropShadow_4229_6' mode='normal' result='shape'/%3e%3c/filter%3e%3c/defs%3e%3c/svg%3e"), auto;
+        }
+
+        #selectionBox {
+            position: absolute;
+            border: 2px dashed green;
+            display: none;
+        }
+
+        #inputBox {
+            transition: transform 0s ease;
+            position: absolute;
+            bottom: 24px;
+        }
+
+    </style>
+</head>
+
+
+<body class="bg-gray-100 h-screen flex items-end justify-center">
+    <input type="text" id="inputBox" class="border-2 border-gray-300 rounded-lg p-2" placeholder="在此输入..." />
+
+    <div id="selectionBox"></div>
+    <div
+    style="width: 0; height: 0; border-left: 50px solid transparent; border-right: 50px solid transparent; border-bottom: 100px solid #007BFF; position: absolute; top: 345px; left: 196px;">
+</div>
+    <div style="width: 100%; height: 100%; position: absolute; top: 0px; left: 0px;"></div>
+
+    <script>
+        const inputBox = document.getElementById('inputBox');
+        const selectionBox = document.getElementById('selectionBox');
+        let startX, startY, isSelecting = false;
+
+        document.addEventListener('mousedown', (e) => {
+            startX = e.pageX;
+            startY = e.pageY;
+            isSelecting = true;
+            selectionBox.style.left = `${startX}px`;
+            selectionBox.style.top = `${startY}px`;
+            selectionBox.style.width = '0px';
+            selectionBox.style.height = '0px';
+            selectionBox.style.display = 'block';
+            inputBox.style.display = 'none'; // 开始框选时隐藏输入框
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isSelecting) {
+                const currentX = e.pageX;
+                const currentY = e.pageY;
+                const width = currentX - startX;
+                const height = currentY - startY;
+                if (Math.abs(width) > 8 || Math.abs(height) > 8) {
+                    selectionBox.style.width = `${width}px`;
+                    selectionBox.style.height = `${height}px`;
+                    inputBox.style.transform = 'translate(0px, 0px)';
+                }
+            }
+        });
+
+        document.addEventListener('mouseup', (e) => {
+            const width = parseInt(selectionBox.style.width);
+            const height = parseInt(selectionBox.style.height);
+            if (width > 8 && height > 8) {
+                isSelecting = false;
+                // 获取选择框的属性以移动输入框
+                const boxRect = selectionBox.getBoundingClientRect();
+                // 移动并动画输入框至选择框的左下方
+                inputBox.style.transform = `translate(${boxRect.left - window.innerWidth / 2 + 96}px, ${boxRect.bottom - window.innerHeight + 72}px)`;
+                inputBox.style.display = 'block'; // 结束框选后显示输入框
+                inputBox.focus();
+                // 保持虚线框可见
+                selectionBox.style.display = 'block';
+            } else {
+                // 如果框选范围小于8*8，则不视为有效框选，隐藏选择框
+                selectionBox.style.display = 'none';
+                inputBox.style.display = 'block'; // 即使框选无效也显示输入框
+            }
+        });
+    </script>
+</body>
+
+</html>

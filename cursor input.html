@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>动态输入框</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
+    <style>
+        /* 自定义输入框样式，确保其始终与鼠标指针对齐 */
+        .custom-cursor-input {
+            position: absolute;
+            padding: 8px;
+            border: 1px solid #BEBEBE;
+            /* 去掉激活时的黄色边框 */
+            outline: none;
+            /* 去掉激活时的默认边框 */
+            border-radius: 10px;
+            border-top-left-radius: 0px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            transition: opacity 0.2s ease;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 1000;
+            resize: none;
+            /* 禁止调整大小 */
+            height: 40px;
+            width: 160px;
+        }
+
+        .cursor-pointer {
+            cursor: none !important;
+        }
+
+        body:not(.cursor-pointer) #dynamic-input {
+            height: 96px;
+            width: 240px;
+            transition: height .1s ease, width .1s ease;
+        }
+
+        /* 新增框选样式 */
+        .selection-box {
+            position: absolute;
+            border: 2px dashed green;
+            pointer-events: none;
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="cursor-pointer">
+    <!-- 输入框元素更改为textarea -->
+    <textarea id="dynamic-input" class="custom-cursor-input" placeholder="单击或框选来创建组件"
+        style="font-size: 14px;"></textarea>
+    <!-- 新增框选元素 -->
+    <div id="selection-box" class="selection-box"></div>
+    <div
+        style="width: 0; height: 0; border-left: 50px solid transparent; border-right: 50px solid transparent; border-bottom: 100px solid #007BFF; position: absolute; top: 345px; left: 196px;">
+    </div>
+    <div style="width: 100%; height: 100%; position: absolute; top: 0px; left: 0px;"></div>
+
+    <script>
+        // 获取输入框元素
+        const inputElement = document.getElementById('dynamic-input');
+        let isInputActive = false;
+        // 获取框选元素
+        const selectionBox = document.getElementById('selection-box');
+        let isSelecting = false;
+        let startX, startY;
+
+        // 设置输入框的位置
+        function setInputPosition(x, y) {
+            inputElement.style.left = `${x}px`;
+            inputElement.style.top = `${y}px`;
+        }
+
+        // 设置框选的位置和大小
+        function setSelectionBox(x1, y1, x2, y2) {
+            const minX = Math.min(x1, x2);
+            const minY = Math.min(y1, y2);
+            const width = Math.abs(x2 - x1);
+            const height = Math.abs(y2 - y1);
+            selectionBox.style.left = `${minX}px`;
+            selectionBox.style.top = `${minY}px`;
+            selectionBox.style.width = `${width}px`;
+            selectionBox.style.height = `${height}px`;
+            selectionBox.style.display = 'block';
+        }
+
+        // 鼠标移动事件
+        document.addEventListener('mousemove', (event) => {
+            if (!isInputActive) {
+                setInputPosition(event.pageX, event.pageY);
+                inputElement.style.opacity = 1;
+            }
+            if (isSelecting) {
+                setSelectionBox(startX, startY, event.pageX, event.pageY);
+            }
+        });
+
+        // 鼠标按下事件
+        document.addEventListener('mousedown', (event) => {
+            startX = event.pageX;
+            startY = event.pageY;
+            isSelecting = true;
+        });
+
+        // 鼠标松开事件
+        document.addEventListener('mouseup', () => {
+            isSelecting = false;
+            // 不再隐藏框选元素
+            // selectionBox.style.display = 'none';
+        });
+
+        // 鼠标点击事件
+        document.addEventListener('click', (event) => {
+            if (!isInputActive) {
+                // 激活输入框并隐藏自定义光标
+                inputElement.style.opacity = 1;
+                inputElement.style.pointerEvents = 'auto';
+                inputElement.focus();
+                inputElement.placeholder = "添加组件描述"; // 更改placeholder
+                isInputActive = true;
+                document.body.classList.remove('cursor-pointer');
+            }
+        });
+
+        // 输入框失去焦点事件
+        inputElement.addEventListener('blur', () => {
+            // 隐藏输入框并显示自定义光标
+            inputElement.style.opacity = 0;
+            inputElement.style.pointerEvents = 'none';
+            inputElement.placeholder = "单击或框选来创建组件"; // 恢复原始placeholder
+            isInputActive = false;
+            document.body.classList.add('cursor-pointer');
+        });
+    </script>
+</body>
+
+</html>
