@@ -13,6 +13,11 @@
             font-family: 'Open Sans', sans-serif;
         }
 
+        :root {
+            --uiWidth: 480px;
+            --uiHeight: 640px;
+        }
+
         .weather-icon {
             font-size: 48px;
         }
@@ -22,7 +27,7 @@
 <body
     style="width:100% !important; height:100% !important; max-width:none!important; min-width:none!important; max-height:none!important; min-height:none!important; position:static;">
     <div
-        class="flex flex-col items-center justify-center h-screen bg-gradient-to-b from-blue-400 to-blue-600 p-4 space-y-6">
+        class="flex flex-col items-center justify-center bg-gradient-to-b from-blue-400 to-blue-600 p-4 space-y-6" style="width: var(--uiWidth); height: var(--uiHeight);">
         <!-- Weather Card -->
         <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm">
             <div class="flex items-center justify-between">

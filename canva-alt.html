@@ -5,101 +5,93 @@
         style="position: absolute; left: -16px; top: -16px; cursor: move;"></span>
 
         <!DOCTYPE html>
-        <html lang="zh-CN">
+        <html lang="zh">
+        
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>日历组件</title>
+            <title>天气应用</title>
             <script src="https://cdn.tailwindcss.com"></script>
+            <script src="https://code.iconify.design/2/2.2.1/iconify.min.js"></script>
+            <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
             <style>
+                body {
+                    font-family: 'Open Sans', sans-serif;
+                }
+        
                 :root {
-                    --uiWidth: 350px;
-                    --uiHeight: 420px;
+                    --uiWidth: 480px;
+                    --uiHeight: 640px;
                 }
         
-                #calendar-container {
-                    width: var(--uiWidth);
-                    height: var(--uiHeight);
+                .weather-icon {
+                    font-size: 48px;
                 }
-        
             </style>
         </head>
-        <body class="bg-gray-100 flex items-center justify-center h-screen">
-            <div id="calendar-container" class="shadow-lg rounded-lg overflow-hidden">
-                <div id="header" class="bg-blue-500 text-white p-4 grid grid-cols-3 items-center">
-                    <button id="prev-month" class="justify-self-start text-xl hover:text-blue-300">←</button>
-                    <h1 id="month-year" class="text-center text-xl font-semibold"></h1>
-                    <button id="next-month" class="justify-self-end text-xl hover:text-blue-300">→</button>
+        
+        <body
+            style="width:100% !important; height:100% !important; max-width:none!important; min-width:none!important; max-height:none!important; min-height:none!important; position:static;">
+            <div
+                class="flex flex-col items-center justify-center bg-gradient-to-b from-blue-400 to-blue-600 p-4 space-y-6" style="width: var(--uiWidth); height: var(--uiHeight);">
+                <!-- Weather Card -->
+                <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h1 class="text-2xl font-bold" id="city">北京</h1>
+                            <p class="text-sm text-gray-600" id="time">星期三, 9:00 AM</p>
+                        </div>
+                        <span class="text-blue-500 text-6xl iconify weather-icon" data-icon="wi:day-sunny"></span>
+                    </div>
+                    <div class="flex justify-between items-center mt-6">
+                        <div class="text-center">
+                            <p class="text-4xl font-semibold" id="temperature">23°</p>
+                            <p class="text-sm text-gray-600" id="weather-condition">晴朗</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-sm font-medium" id="precipitation-label">降水量</p>
+                            <p class="text-lg font-semibold" id="precipitation-value">0%</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-sm font-medium" id="humidity-label">湿度</p>
+                            <p class="text-lg font-semibold" id="humidity-value">65%</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-sm font-medium" id="wind-label">风速</p>
+                            <p class="text-lg font-semibold" id="wind-speed">13 km/h</p>
+                        </div>
+                    </div>
                 </div>
-                <div id="day-names" class="grid grid-cols-7 divide-x divide-gray-200">
-                    <div class="py-2 text-sm text-center text-gray-600">Sun</div>
-                    <div class="py-2 text-sm text-center text-gray-600">Mon</div>
-                    <div class="py-2 text-sm text-center text-gray-600">Tue</div>
-                    <div class="py-2 text-sm text-center text-gray-600">Wed</div>
-                    <div class="py-2 text-sm text-center text-gray-600">Thu</div>
-                    <div class="py-2 text-sm text-center text-gray-600">Fri</div>
-                    <div class="py-2 text-sm text-center text-gray-600">Sat</div>
-                </div>
-                <div id="calendar-days" class="grid grid-cols-7 bg-white">
-                    <!-- Days will be dynamically generated -->
+                <!-- Forecast -->
+                <div class="w-full max-w-sm space-y-4">
+                    <div class="flex items-center justify-between bg-white rounded-lg shadow-lg p-4">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-blue-400 text-2xl iconify" data-icon="wi:cloudy"></span>
+                            <p class="font-medium" id="forecast-day-one">星期四</p>
+                        </div>
+                        <p class="font-semibold" id="forecast-temp-one">21° / 16°</p>
+                    </div>
+                    <div class="flex items-center justify-between bg-white rounded-lg shadow-lg p-4">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-blue-400 text-2xl iconify" data-icon="wi:rain"></span>
+                            <p class="font-medium" id="forecast-day-two">星期五</p>
+                        </div>
+                        <p class="font-semibold" id="forecast-temp-two">18° / 14°</p>
+                    </div>
+                    <div class="flex items-center justify-between bg-white rounded-lg shadow-lg p-4">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-blue-400 text-2xl iconify" data-icon="wi:day-sunny"></span>
+                            <p class="font-medium" id="forecast-day-three">星期六</p>
+                        </div>
+                        <p class="font-semibold" id="forecast-temp-three">22° / 17°</p>
+                    </div>
                 </div>
             </div>
-        
-            <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
             <script>
-                function setupCalendar() {
-                    const date = new Date(),
-                        monthYearElement = document.getElementById('month-year'),
-                        calendarDaysElement = document.getElementById('calendar-days');
-        
-                    function getMonthName(index){
-                        const monthNames = ["January", "February", "March", "April", "May", "June",
-                            "July", "August", "September", "October", "November", "December"];
-                        return monthNames[index];
-                    }
-        
-                    function getCurrentYearMonth() {
-                        return `${getMonthName(date.getMonth())} ${date.getFullYear()}`;
-                    }
-        
-                    function daysInMonth(year, month) {
-                        return new Date(year, month + 1, 0).getDate();
-                    }
-        
-                    function fillCalendar() {
-                        const days = daysInMonth(date.getFullYear(), date.getMonth()),
-                              firstDay = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
-                        
-                        monthYearElement.textContent = getCurrentYearMonth();
-                        calendarDaysElement.innerHTML = '';
-        
-                        // Fill initial empty days
-                        for (let i = 0; i < firstDay; i++) {
-                            calendarDaysElement.innerHTML += '<div class="text-center p-2"></div>';
-                        }
-        
-                        // Fill actual days
-                        for (let day = 1; day <= days; day++) {
-                            calendarDaysElement.innerHTML += `<div class="text-center p-2 hover:bg-gray-200 cursor-pointer">${day}</div>`;
-                        }
-                    }
-        
-                    document.getElementById('next-month').addEventListener('click', () => {
-                        date.setMonth(date.getMonth() + 1);
-                        fillCalendar();
-                    });
-        
-                    document.getElementById('prev-month').addEventListener('click', () => {
-                        date.setMonth(date.getMonth() - 1);
-                        fillCalendar();
-                    });
-        
-                    fillCalendar();
-                }
-        
-                window.onload = setupCalendar;
+                // Add your JavaScript here if necessary
             </script>
         </body>
+        
         </html>
 
 </div>
