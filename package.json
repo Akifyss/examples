@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "antd": "^5.14.1",
-    "echarts": "^5.4.3",
-    "sonner": "^1.4.0"
-  }
-}

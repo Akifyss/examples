@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather App</title>
+    <title>天气应用</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/2/2.2.1/iconify.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -27,27 +27,27 @@
         <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm">
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-2xl font-bold">New York</h1>
-                    <p class="text-sm text-gray-600">Wednesday, 9:00 AM</p>
+                    <h1 class="text-2xl font-bold" id="city">北京</h1>
+                    <p class="text-sm text-gray-600" id="time">星期三, 9:00 AM</p>
                 </div>
                 <span class="text-blue-500 text-6xl iconify weather-icon" data-icon="wi:day-sunny"></span>
             </div>
             <div class="flex justify-between items-center mt-6">
                 <div class="text-center">
-                    <p class="text-4xl font-semibold">23°</p>
-                    <p class="text-sm text-gray-600">Sunny</p>
+                    <p class="text-4xl font-semibold" id="temperature">23°</p>
+                    <p class="text-sm text-gray-600" id="weather-condition">晴朗</p>
                 </div>
                 <div class="text-center">
-                    <p class="text-sm font-medium">Precipitation</p>
-                    <p class="text-lg font-semibold">0%</p>
+                    <p class="text-sm font-medium" id="precipitation-label">降水量</p>
+                    <p class="text-lg font-semibold" id="precipitation-value">0%</p>
                 </div>
                 <div class="text-center">
-                    <p class="text-sm font-medium">Humidity</p>
-                    <p class="text-lg font-semibold">65%</p>
+                    <p class="text-sm font-medium" id="humidity-label">湿度</p>
+                    <p class="text-lg font-semibold" id="humidity-value">65%</p>
                 </div>
                 <div class="text-center">
-                    <p class="text-sm font-medium">Wind</p>
-                    <p class="text-lg font-semibold">13 km/h</p>
+                    <p class="text-sm font-medium" id="wind-label">风速</p>
+                    <p class="text-lg font-semibold" id="wind-speed">13 km/h</p>
                 </div>
             </div>
         </div>
@@ -56,23 +56,23 @@
             <div class="flex items-center justify-between bg-white rounded-lg shadow-lg p-4">
                 <div class="flex items-center space-x-2">
                     <span class="text-blue-400 text-2xl iconify" data-icon="wi:cloudy"></span>
-                    <p class="font-medium">Thursday</p>
+                    <p class="font-medium" id="forecast-day-one">星期四</p>
                 </div>
-                <p class="font-semibold">21° / 16°</p>
+                <p class="font-semibold" id="forecast-temp-one">21° / 16°</p>
             </div>
             <div class="flex items-center justify-between bg-white rounded-lg shadow-lg p-4">
                 <div class="flex items-center space-x-2">
                     <span class="text-blue-400 text-2xl iconify" data-icon="wi:rain"></span>
-                    <p class="font-medium">Friday</p>
+                    <p class="font-medium" id="forecast-day-two">星期五</p>
                 </div>
-                <p class="font-semibold">18° / 14°</p>
+                <p class="font-semibold" id="forecast-temp-two">18° / 14°</p>
             </div>
             <div class="flex items-center justify-between bg-white rounded-lg shadow-lg p-4">
                 <div class="flex items-center space-x-2">
                     <span class="text-blue-400 text-2xl iconify" data-icon="wi:day-sunny"></span>
-                    <p class="font-medium">Saturday</p>
+                    <p class="font-medium" id="forecast-day-three">星期六</p>
                 </div>
-                <p class="font-semibold">22° / 17°</p>
+                <p class="font-semibold" id="forecast-temp-three">22° / 17°</p>
             </div>
         </div>
     </div>
