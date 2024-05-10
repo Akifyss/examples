@@ -4,95 +4,152 @@
     <span class="iconify drag-icon" data-icon="grommet-icons:drag"
         style="position: absolute; left: -16px; top: -16px; cursor: move;"></span>
 
-        <!DOCTYPE html>
-        <html lang="zh">
-        
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>天气应用</title>
-            <script src="https://cdn.tailwindcss.com"></script>
-            <script src="https://code.iconify.design/2/2.2.1/iconify.min.js"></script>
-            <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-            <style>
-                body {
-                    font-family: 'Open Sans', sans-serif;
-                }
-        
-                :root {
-                    --uiWidth: 480px;
-                    --uiHeight: 640px;
-                }
-        
-                .weather-icon {
-                    font-size: 48px;
-                }
-            </style>
-        </head>
-        
-        <body
-            style="width:100% !important; height:100% !important; max-width:none!important; min-width:none!important; max-height:none!important; min-height:none!important; position:static;">
-            <div
-                class="flex flex-col items-center justify-center bg-gradient-to-b from-blue-400 to-blue-600 p-4 space-y-6" style="width: var(--uiWidth); height: var(--uiHeight);">
-                <!-- Weather Card -->
-                <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h1 class="text-2xl font-bold" id="city">北京</h1>
-                            <p class="text-sm text-gray-600" id="time">星期三, 9:00 AM</p>
-                        </div>
-                        <span class="text-blue-500 text-6xl iconify weather-icon" data-icon="wi:day-sunny"></span>
-                    </div>
-                    <div class="flex justify-between items-center mt-6">
-                        <div class="text-center">
-                            <p class="text-4xl font-semibold" id="temperature">23°</p>
-                            <p class="text-sm text-gray-600" id="weather-condition">晴朗</p>
-                        </div>
-                        <div class="text-center">
-                            <p class="text-sm font-medium" id="precipitation-label">降水量</p>
-                            <p class="text-lg font-semibold" id="precipitation-value">0%</p>
-                        </div>
-                        <div class="text-center">
-                            <p class="text-sm font-medium" id="humidity-label">湿度</p>
-                            <p class="text-lg font-semibold" id="humidity-value">65%</p>
-                        </div>
-                        <div class="text-center">
-                            <p class="text-sm font-medium" id="wind-label">风速</p>
-                            <p class="text-lg font-semibold" id="wind-speed">13 km/h</p>
-                        </div>
-                    </div>
-                </div>
-                <!-- Forecast -->
-                <div class="w-full max-w-sm space-y-4">
-                    <div class="flex items-center justify-between bg-white rounded-lg shadow-lg p-4">
-                        <div class="flex items-center space-x-2">
-                            <span class="text-blue-400 text-2xl iconify" data-icon="wi:cloudy"></span>
-                            <p class="font-medium" id="forecast-day-one">星期四</p>
-                        </div>
-                        <p class="font-semibold" id="forecast-temp-one">21° / 16°</p>
-                    </div>
-                    <div class="flex items-center justify-between bg-white rounded-lg shadow-lg p-4">
-                        <div class="flex items-center space-x-2">
-                            <span class="text-blue-400 text-2xl iconify" data-icon="wi:rain"></span>
-                            <p class="font-medium" id="forecast-day-two">星期五</p>
-                        </div>
-                        <p class="font-semibold" id="forecast-temp-two">18° / 14°</p>
-                    </div>
-                    <div class="flex items-center justify-between bg-white rounded-lg shadow-lg p-4">
-                        <div class="flex items-center space-x-2">
-                            <span class="text-blue-400 text-2xl iconify" data-icon="wi:day-sunny"></span>
-                            <p class="font-medium" id="forecast-day-three">星期六</p>
-                        </div>
-                        <p class="font-semibold" id="forecast-temp-three">22° / 17°</p>
-                    </div>
-                </div>
+    <!DOCTYPE html>
+    <html lang="zh-CN">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>计算器</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
+        <style>
+            #calculator-container {
+                width: 100% !important;
+                height: 100% !important;
+                margin: 0 !important;
+                max-width: none !important;
+                min-width: none !important;
+                max-height: none !important;
+                min-height: none !important;
+                position: static !important;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <div id="calculator-container" class="shadow-lg rounded-lg p-6 calculator-grid grid grid-cols-4 gap-3">
+            <div class="output col-span-4 bg-gray-200 rounded p-3 text-right" style="height: 64px;">
+                <div id="previous-operand" class="text-sm opacity-50"></div>
+                <div id="current-operand" class="text-xl font-bold"></div>
             </div>
-            <script>
-                // Add your JavaScript here if necessary
-            </script>
-        </body>
-        
-        </html>
+            <button id="span-two" class="col-span-2 button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('AC')">AC</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('DEL')">DEL</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('/')">÷</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('1')">1</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('2')">2</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('3')">3</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('*')">×</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('4')">4</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('5')">5</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('6')">6</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('-')">-</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('7')">7</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('8')">8</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('9')">9</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('+')">+</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded col-span-2"
+                onclick="updateDisplay('0')">0</button>
+            <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+                onclick="updateDisplay('.')">.</button>
+            <button class="button bg-blue-500 hover:bg-blue-600 text-white rounded col-span-1"
+                onclick="compute()">=</button>
+        </div>
+
+        <script>
+            let previousOperandTextElement = document.querySelector('#previous-operand');
+            let currentOperandTextElement = document.querySelector('#current-operand');
+            let currentOperand = '';
+            let previousOperand = '';
+            let operation = undefined;
+
+            function updateDisplay(value) {
+                if (value === 'AC') {
+                    currentOperand = '';
+                    previousOperand = '';
+                    operation = undefined;
+                    updateScreen();
+                    return;
+                }
+                if (value === 'DEL') {
+                    currentOperand = currentOperand.toString().slice(0, -1);
+                    updateScreen();
+                    return;
+                }
+                if (value === '.' && currentOperand.includes('.')) return;
+                if (['+', '-', '*', '/'].includes(value)) {
+                    if (currentOperand === '') return;
+                    if (previousOperand !== '') {
+                        compute();
+                    }
+                    operation = value;
+                    previousOperand = currentOperand;
+                    currentOperand = '';
+                    updateScreen();
+                    return;
+                }
+                currentOperand = currentOperand.toString() + value.toString();
+                updateScreen();
+            }
+
+            function compute() {
+                let computation;
+                const prev = parseFloat(previousOperand);
+                const current = parseFloat(currentOperand);
+                if (isNaN(prev) || isNaN(current)) return;
+                switch (operation) {
+                    case '+':
+                        computation = prev + current;
+                        break;
+                    case '-':
+                        computation = prev - current;
+                        break;
+                    case '*':
+                        computation = prev * current;
+                        break;
+                    case '/':
+                        computation = prev / current;
+                        break;
+                    default:
+                        return;
+                }
+                currentOperand = computation;
+                operation = undefined;
+                previousOperand = '';
+                updateScreen();
+            }
+
+            function updateScreen() {
+                currentOperandTextElement.innerText = currentOperand;
+                if (operation != null) {
+                    previousOperandTextElement.innerText = `${previousOperand} ${operation}`;
+                } else {
+                    previousOperandTextElement.innerText = '';
+                }
+            }
+        </script>
+    </body>
+
+    </html>
+
+
+</div>
 
 </div>
 <style>
@@ -203,7 +260,7 @@
                 document.documentElement.style.setProperty('--uiHeight', containerHeight);
             }
 
-            
+
 
             function onMouseUpResize() {
                 document.removeEventListener('mousemove', onMouseMoveResize);

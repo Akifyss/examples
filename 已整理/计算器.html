@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>计算器</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
+    <style>
+        #calculator-container {
+            width: 100% !important;
+            height: 100% !important;
+            margin: 0 !important;
+            max-width: none !important;
+            min-width: none !important;
+            max-height: none !important;
+            min-height: none !important;
+            position: static !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="calculator-container" class="shadow-lg rounded-lg p-6 calculator-grid grid grid-cols-4 gap-3">
+        <div class="output col-span-4 bg-gray-200 rounded p-3 text-right" style="height: 64px;">
+            <div id="previous-operand" class="text-sm opacity-50"></div>
+            <div id="current-operand" class="text-xl font-bold"></div>
+        </div>
+        <button id="span-two" class="col-span-2 button bg-gray-300 hover:bg-gray-400 text-black rounded"
+            onclick="updateDisplay('AC')">AC</button>
+        <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded"
+            onclick="updateDisplay('DEL')">DEL</button>
+        <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded" onclick="updateDisplay('/')">÷</button>
+        <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded" onclick="updateDisplay('1')">1</button>
+        <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded" onclick="updateDisplay('2')">2</button>
+        <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded" onclick="updateDisplay('3')">3</button>
+        <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded" onclick="updateDisplay('*')">×</button>
+        <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded" onclick="updateDisplay('4')">4</button>
+        <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded" onclick="updateDisplay('5')">5</button>
+        <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded" onclick="updateDisplay('6')">6</button>
+        <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded" onclick="updateDisplay('-')">-</button>
+        <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded" onclick="updateDisplay('7')">7</button>
+        <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded" onclick="updateDisplay('8')">8</button>
+        <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded" onclick="updateDisplay('9')">9</button>
+        <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded" onclick="updateDisplay('+')">+</button>
+        <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded col-span-2"
+            onclick="updateDisplay('0')">0</button>
+        <button class="button bg-gray-300 hover:bg-gray-400 text-black rounded" onclick="updateDisplay('.')">.</button>
+        <button class="button bg-blue-500 hover:bg-blue-600 text-white rounded col-span-1"
+            onclick="compute()">=</button>
+    </div>
+
+    <script>
+        let previousOperandTextElement = document.querySelector('#previous-operand');
+        let currentOperandTextElement = document.querySelector('#current-operand');
+        let currentOperand = '';
+        let previousOperand = '';
+        let operation = undefined;
+
+        function updateDisplay(value) {
+            if (value === 'AC') {
+                currentOperand = '';
+                previousOperand = '';
+                operation = undefined;
+                updateScreen();
+                return;
+            }
+            if (value === 'DEL') {
+                currentOperand = currentOperand.toString().slice(0, -1);
+                updateScreen();
+                return;
+            }
+            if (value === '.' && currentOperand.includes('.')) return;
+            if (['+', '-', '*', '/'].includes(value)) {
+                if (currentOperand === '') return;
+                if (previousOperand !== '') {
+                    compute();
+                }
+                operation = value;
+                previousOperand = currentOperand;
+                currentOperand = '';
+                updateScreen();
+                return;
+            }
+            currentOperand = currentOperand.toString() + value.toString();
+            updateScreen();
+        }
+
+        function compute() {
+            let computation;
+            const prev = parseFloat(previousOperand);
+            const current = parseFloat(currentOperand);
+            if (isNaN(prev) || isNaN(current)) return;
+            switch (operation) {
+                case '+':
+                    computation = prev + current;
+                    break;
+                case '-':
+                    computation = prev - current;
+                    break;
+                case '*':
+                    computation = prev * current;
+                    break;
+                case '/':
+                    computation = prev / current;
+                    break;
+                default:
+                    return;
+            }
+            currentOperand = computation;
+            operation = undefined;
+            previousOperand = '';
+            updateScreen();
+        }
+
+        function updateScreen() {
+            currentOperandTextElement.innerText = currentOperand;
+            if (operation != null) {
+                previousOperandTextElement.innerText = `${previousOperand} ${operation}`;
+            } else {
+                previousOperandTextElement.innerText = '';
+            }
+        }
+    </script>
+</body>
+
+</html>
