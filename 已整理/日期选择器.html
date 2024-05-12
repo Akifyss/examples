@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Date Picker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --defaultWidth: 300px;
+            --defaultHeight: 60px;
+            --uiWidth: var(--defaultWidth);
+            --uiHeight: var(--defaultHeight);
+        }
+
+        #UIcontent {
+            width: var(--uiWidth);
+            height: var(--uiHeight);
+        }
+    </style>
+</head>
+
+<body>
+    <input type="date" id="UIcontent"
+        class="w-full h-full border-gray-300 rounded-lg shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
+</body>
+
+</html>

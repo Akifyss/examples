@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
+    <style>
+        :root {
+            --uiWidth: 250px;
+            --uiHeight: 60px;
+        }
+        #rating-container {
+            width: var(--uiWidth);
+            height: var(--uiHeight);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+        }
+        .star {
+            cursor: pointer;
+            transition: color 0.2s;
+            color: #dddddd;
+            font-size: 2rem;
+        }
+        .star:hover,
+        .star.active,
+        .star.highlight {
+            color: #fec600;
+        }
+    </style>
+</head>
+<body class="bg-white">
+    <div id="rating-container">
+        <iconify-icon id="star1" class="star" icon="ant-design:star-filled"></iconify-icon>
+        <iconify-icon id="star2" class="star" icon="ant-design:star-filled"></iconify-icon>
+        <iconify-icon id="star3" class="star" icon="ant-design:star-filled"></iconify-icon>
+        <iconify-icon id="star4" class="star" icon="ant-design:star-filled"></iconify-icon>
+        <iconify-icon id="star5" class="star" icon="ant-design:star-filled"></iconify-icon>
+    </div>
+    <script>
+        const stars = document.querySelectorAll('.star');
+        stars.forEach((star, index) => {
+            star.addEventListener('click', () => {
+                for (let i = 0; i < stars.length; i++) {
+                    if (i <= index) {
+                        stars[i].classList.add('active');
+                    } else {
+                        stars[i].classList.remove('active');
+                    }
+                }
+            });
+
+            star.addEventListener('mouseenter', () => {
+                for (let i = 0; i <= index; i++) {
+                    stars[i].classList.add('highlight');
+                }
+            });
+
+            star.addEventListener('mouseleave', () => {
+                for (let i = 0; i < stars.length; i++) {
+                    stars[i].classList.remove('highlight');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

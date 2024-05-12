@@ -1,0 +1,104 @@
+    <!DOCTYPE html>
+    <html lang="zh-cn">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>时钟</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+            body {
+                font-family: 'Roboto', sans-serif;
+            }
+
+            .clock {
+                width: 100% !important;
+                height: 100% !important;
+                margin: 0 !important;
+                max-width: none !important;
+                min-width: none !important;
+                max-height: none !important;
+                min-height: none !important;
+                position: static !important;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: #f3f3f3;
+                border-radius: 50%;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+            }
+
+            .hand {
+                position: absolute;
+                bottom: 50%;
+                background: #333;
+                transform-origin: 50% 100%;
+                transition: transform 0.05s ease-in-out;
+            }
+
+            .hand.hour {
+                width: 6px;
+                height: 50px;
+            }
+
+            .hand.minute {
+                width: 4px;
+                height: 70px;
+            }
+
+            .hand.second {
+                width: 2px;
+                height: 90px;
+                background: red;
+            }
+
+            .dot {
+                position: absolute;
+                width: 12px;
+                height: 12px;
+                background: #333;
+                border-radius: 50%;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="clock">
+            <div class="hand hour" id="hourHand"></div>
+            <div class="hand minute" id="minuteHand"></div>
+            <div class="hand second" id="secondHand"></div>
+            <div class="dot"></div>
+        </div>
+
+        <script>
+            const setRotation = (element, rotationRatio) => {
+                element.style.setProperty('--rotation', rotationRatio * 360);
+                element.style.transform = `rotate(${rotationRatio * 360}deg)`;
+            }
+
+            const setClock = () => {
+                const currentDate = new Date();
+                const secondsRatio = currentDate.getSeconds() / 60;
+                const minutesRatio = (secondsRatio + currentDate.getMinutes()) / 60;
+                const hoursRatio = (minutesRatio + currentDate.getHours()) / 12;
+                setRotation(hourHand, hoursRatio);
+                setRotation(minuteHand, minutesRatio);
+                setRotation(secondHand, secondsRatio);
+            }
+
+            const hourHand = document.getElementById('hourHand');
+            const minuteHand = document.getElementById('minuteHand');
+            const secondHand = document.getElementById('secondHand');
+
+            setClock();
+            setInterval(setClock, 1000);
+        </script>
+    </body>
+
+    </html>
