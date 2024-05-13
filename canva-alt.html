@@ -6,125 +6,136 @@
 
         <!DOCTYPE html>
         <html lang="zh-CN">
+        
         <head>
-        <meta charset="UTF-8">
-        <title>音乐播放器</title>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <style>
-          :root {
-            --uiWidth: 800px;
-            --uiHeight: 600px;
-          }
-          body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100vw;
-            height: 100vh;
-            margin: 0;
-          }
-          #main-ui {
-            width: var(--uiWidth);
-            height: var(--uiHeight);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-            align-items: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-          }
-          #cover {
-            width: 200px;
-            height: 200px;
-            background-size: cover;
-            background-position: center;
-            border-radius: 50%;
-          }
-          .player-controls {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-          }
-          progress {
-            width: 500px;
-          }
-        </style>
+            <meta charset="UTF-8">
+            <title>仿真时钟</title>
+            <script src="https://cdn.tailwindcss.com"></script>
+            <style>
+                :root {
+                    --uiWidth: 300px;
+                    --uiHeight: 300px;
+                }
+        
+                body {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 100vw;
+                    height: 100vh;
+                    margin: 0;
+                }
+        
+                #clock {
+                    width: var(--uiWidth);
+                    height: var(--uiHeight);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background-color: #f3f4f6;
+                    border-radius: 50%;
+                    border: 5px solid #1f2937;
+                    position: relative;
+                }
+        
+                .hand {
+                    position: absolute;
+                    bottom: 50%;
+                    background-color: #1f2937;
+                    border-radius: 5px;
+                    transform-origin: 50% 100%;
+                }
+        
+                #hour-hand {
+                    width: 6%;
+                    height: 20%;
+                }
+        
+                #minute-hand {
+                    width: 4%;
+                    height: 30%;
+                }
+        
+                #second-hand {
+                    width: 2%;
+                    height: 35%;
+                    background-color: #ef4444;
+                }
+        
+                #shaft {
+                    width: 10%;
+                    height: 10%;
+                    background-color: #1f2937;
+                    border-radius: 50%;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                }
+        
+                #shaft0 {
+                    width: 5%;
+                    height: 5%;
+                    background-color: #ef4444;
+                    border-radius: 50%;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                }
+        
+                .tick {
+                    position: absolute;
+                    width: 2%;
+                    height: 100%;
+                    background: linear-gradient(180deg, #1f2937 0%, #1f2937 5%, rgba(0, 0, 0, 0) 5%, rgba(0, 0, 0, 0) 100%);
+                }
+            </style>
         </head>
+        
         <body>
-        <div id="main-ui">
-          <div id="cover" style="background-image: url('https://source.unsplash.com/500x500/?music')"></div>
-          <progress id="progress-bar" value="0" max="100"></progress>
+            <div id="clock">
+                <div id="shaft"></div>
+                <div id="hour-hand" class="hand"></div>
+                <div id="minute-hand" class="hand"></div>
+                <div id="second-hand" class="hand"></div>
+                <div id="shaft0"></div>
+                <div class="tick" style="transform: rotate(0deg);"></div>
+                <div class="tick" style="transform: rotate(30deg);"></div>
+                <div class="tick" style="transform: rotate(60deg);"></div>
+                <div class="tick" style="transform: rotate(90deg);"></div>
+                <div class="tick" style="transform: rotate(120deg);"></div>
+                <div class="tick" style="transform: rotate(150deg);"></div>
+                <div class="tick" style="transform: rotate(180deg);"></div>
+                <div class="tick" style="transform: rotate(210deg);"></div>
+                <div class="tick" style="transform: rotate(240deg);"></div>
+                <div class="tick" style="transform: rotate(270deg);"></div>
+                <div class="tick" style="transform: rotate(300deg);"></div>
+                <div class="tick" style="transform: rotate(330deg);"></div>
         
-          <div class="player-controls">
-            <button id="prev" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">上一首</button>
-            <button id="play" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">播放</button>
-            <button id="next" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">下一首</button>
-          </div>
+            </div>
         
-          <div id="playlist">
-            <select id="playlist-select" class="mt-2">
-              <option value="0">歌曲 1: 96031c9b</option>
-              <option value="1">歌曲 2: a5e2198a</option>
-              <option value="2">歌曲 3: b26f13fd</option>
-            </select>
-          </div>
-        </div>
+            <script>
+                const secondHand = document.getElementById('second-hand');
+                const minuteHand = document.getElementById('minute-hand');
+                const hourHand = document.getElementById('hour-hand');
         
-        <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
-        <script>
-          const tracks = [
-            "https://cdn1.suno.ai/96031c9b-930b-4aae-a433-d624a1686d2f.mp3",
-            "https://cdn1.suno.ai/a5e2198a-f352-4abb-9a24-7f81b143ded3.mp3",
-            "https://cdn1.suno.ai/b26f13fd-69d0-4b70-a575-2757d9dea505.mp3"
-          ];
-          let currentIndex = 0;
-          const audio = new Audio(tracks[currentIndex]);
-          const playButton = document.getElementById("play");
-          const prevButton = document.getElementById("prev");
-          const nextButton = document.getElementById("next");
-          const progressBar = document.getElementById("progress-bar");
-          const playlistSelect = document.getElementById("playlist-select");
+                function setClock() {
+                    const currentDate = new Date();
+                    const secondsRatio = currentDate.getSeconds() / 60;
+                    const minutesRatio = (secondsRatio + currentDate.getMinutes()) / 60;
+                    const hoursRatio = (minutesRatio + currentDate.getHours()) / 12;
         
-          function updateProgress() {
-            const percentage = (audio.currentTime / audio.duration) * 100;
-            progressBar.value = isNaN(percentage) ? 0 : percentage;
-          }
+                    secondHand.style.transform = `rotate(${secondsRatio * 360}deg)`;
+                    minuteHand.style.transform = `rotate(${minutesRatio * 360}deg)`;
+                    hourHand.style.transform = `rotate(${hoursRatio * 360}deg)`;
+                }
         
-          function togglePlay() {
-            if (audio.paused) {
-              audio.play();
-              playButton.textContent = '暂停';
-            } else {
-              audio.pause();
-              playButton.textContent = '播放';
-            }
-          }
-        
-          function changeTrack(delta) {
-            currentIndex = (currentIndex + delta + tracks.length) % tracks.length;
-            audio.src = tracks[currentIndex];
-            audio.play();
-            playButton.textContent = '暂停';
-            playlistSelect.value = currentIndex.toString();
-          }
-        
-          playButton.addEventListener('click', togglePlay);
-          prevButton.addEventListener('click', () => changeTrack(-1));
-          nextButton.addEventListener('click', () => changeTrack(1));
-        
-          audio.addEventListener('timeupdate', updateProgress);
-          audio.addEventListener('ended', () => changeTrack(1));
-        
-          playlistSelect.addEventListener('change', function() {
-            currentIndex = this.value;
-            audio.src = tracks[currentIndex];
-            audio.play();
-            playButton.textContent = '暂停';
-          });
-        </script>
+                setInterval(setClock, 1000);
+                setClock();  // Initialize clock on load
+            </script>
         </body>
+        
         </html>
 </div>
 
