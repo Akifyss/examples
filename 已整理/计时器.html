@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,13 +14,20 @@
       --uiWidth: 100%;
       --uiHeight: 100%;
     }
+
+    #timeDisplay {
+      font-family: 'Courier New', monospace;
+      /* Ensures fixed-width font for consistent display */
+    }
   </style>
 </head>
+
 <body class="bg-gray-100 flex items-center justify-center h-screen">
-  <div id="timerContainer" class="bg-white rounded-lg shadow-md p-4 flex flex-col items-center" style="width: var(--uiWidth); height: var(--uiHeight);">
+  <div id="timerContainer" class="bg-white rounded-lg shadow-md p-4 flex flex-col items-center"
+    style="width: var(--uiWidth); height: var(--uiHeight);">
     <h1 id="timerTitle" class="text-2xl font-bold mb-4">计时器</h1>
     <div id="timeDisplay" class="text-6xl font-bold mb-4">
-      <span id="minutes">00</span>:<span id="seconds">00</span>
+      <span id="minutes">00</span>:<span id="seconds">00</span>.<span id="milliseconds">00</span>
     </div>
     <div id="controls" class="flex space-x-4">
       <button id="startButton" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
@@ -36,27 +44,30 @@
   <script>
     const minutesDisplay = document.getElementById('minutes');
     const secondsDisplay = document.getElementById('seconds');
+    const millisecondsDisplay = document.getElementById('milliseconds');
     const startButton = document.getElementById('startButton');
     const pauseButton = document.getElementById('pauseButton');
     const resetButton = document.getElementById('resetButton');
 
-    let totalSeconds = 0;
+    let totalMilliseconds = 0;
     let intervalId = null;
 
     function formatTime(time) {
-      const minutes = Math.floor(time / 60);
-      const seconds = time % 60;
-      return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      const minutes = Math.floor(time / 60000);
+      const seconds = Math.floor((time % 60000) / 1000);
+      const milliseconds = time % 1000;
+      return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(2, '0').substring(0, 2)}`;
     }
 
     function startTimer() {
       if (intervalId === null) {
         intervalId = setInterval(() => {
-          totalSeconds++;
-          const formattedTime = formatTime(totalSeconds);
+          totalMilliseconds += 10;
+          const formattedTime = formatTime(totalMilliseconds);
           minutesDisplay.textContent = formattedTime.split(':')[0];
-          secondsDisplay.textContent = formattedTime.split(':')[1];
-        }, 1000);
+          secondsDisplay.textContent = formattedTime.split(':')[1].split('.')[0];
+          millisecondsDisplay.textContent = formattedTime.split('.')[1];
+        }, 10);
       }
     }
 
@@ -67,9 +78,10 @@
 
     function resetTimer() {
       pauseTimer();
-      totalSeconds = 0;
+      totalMilliseconds = 0;
       minutesDisplay.textContent = '00';
       secondsDisplay.textContent = '00';
+      millisecondsDisplay.textContent = '00';
     }
 
     startButton.addEventListener('click', startTimer);
@@ -77,4 +89,5 @@
     resetButton.addEventListener('click', resetTimer);
   </script>
 </body>
+
 </html>
