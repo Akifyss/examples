@@ -1,104 +1,133 @@
-    <!DOCTYPE html>
-    <html lang="zh-cn">
+<!DOCTYPE html>
+<html lang="zh-CN">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>时钟</title>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
-        <style>
-            @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+<head>
+    <meta charset="UTF-8">
+    <title>仿真时钟</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --uiWidth: 300px;
+            --uiHeight: 300px;
+        }
 
-            body {
-                font-family: 'Roboto', sans-serif;
-            }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+        }
 
-            .clock {
-                width: 100% !important;
-                height: 100% !important;
-                margin: 0 !important;
-                max-width: none !important;
-                min-width: none !important;
-                max-height: none !important;
-                min-height: none !important;
-                position: static !important;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background: #f3f3f3;
-                border-radius: 50%;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
-            }
+        #clock {
+            width: var(--uiWidth);
+            height: var(--uiHeight);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f3f4f6;
+            border-radius: 50%;
+            border: 5px solid #1f2937;
+            position: relative;
+        }
 
-            .hand {
-                position: absolute;
-                bottom: 50%;
-                background: #333;
-                transform-origin: 50% 100%;
-                transition: transform 0.05s ease-in-out;
-            }
+        .hand {
+            position: absolute;
+            bottom: 50%;
+            background-color: #1f2937;
+            border-radius: 5px;
+            transform-origin: 50% 100%;
+        }
 
-            .hand.hour {
-                width: 6px;
-                height: 50px;
-            }
+        #hour-hand {
+            width: 6%;
+            height: 20%;
+        }
 
-            .hand.minute {
-                width: 4px;
-                height: 70px;
-            }
+        #minute-hand {
+            width: 4%;
+            height: 30%;
+        }
 
-            .hand.second {
-                width: 2px;
-                height: 90px;
-                background: red;
-            }
+        #second-hand {
+            width: 2%;
+            height: 35%;
+            background-color: #ef4444;
+        }
 
-            .dot {
-                position: absolute;
-                width: 12px;
-                height: 12px;
-                background: #333;
-                border-radius: 50%;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-            }
-        </style>
-    </head>
+        #shaft {
+            width: 10%;
+            height: 10%;
+            background-color: #1f2937;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
 
-    <body>
-        <div class="clock">
-            <div class="hand hour" id="hourHand"></div>
-            <div class="hand minute" id="minuteHand"></div>
-            <div class="hand second" id="secondHand"></div>
-            <div class="dot"></div>
-        </div>
+        #shaft0 {
+            width: 5%;
+            height: 5%;
+            background-color: #ef4444;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
 
-        <script>
-            const setRotation = (element, rotationRatio) => {
-                element.style.setProperty('--rotation', rotationRatio * 360);
-                element.style.transform = `rotate(${rotationRatio * 360}deg)`;
-            }
+        .tick {
+            position: absolute;
+            width: 2%;
+            height: 100%;
+            background: linear-gradient(180deg, #1f2937 0%, #1f2937 5%, rgba(0, 0, 0, 0) 5%, rgba(0, 0, 0, 0) 100%);
+        }
+    </style>
+</head>
 
-            const setClock = () => {
-                const currentDate = new Date();
-                const secondsRatio = currentDate.getSeconds() / 60;
-                const minutesRatio = (secondsRatio + currentDate.getMinutes()) / 60;
-                const hoursRatio = (minutesRatio + currentDate.getHours()) / 12;
-                setRotation(hourHand, hoursRatio);
-                setRotation(minuteHand, minutesRatio);
-                setRotation(secondHand, secondsRatio);
-            }
+<body>
+    <div id="clock">
+        <div id="shaft"></div>
+        <div id="hour-hand" class="hand"></div>
+        <div id="minute-hand" class="hand"></div>
+        <div id="second-hand" class="hand"></div>
+        <div id="shaft0"></div>
+        <div class="tick" style="transform: rotate(0deg);"></div>
+        <div class="tick" style="transform: rotate(30deg);"></div>
+        <div class="tick" style="transform: rotate(60deg);"></div>
+        <div class="tick" style="transform: rotate(90deg);"></div>
+        <div class="tick" style="transform: rotate(120deg);"></div>
+        <div class="tick" style="transform: rotate(150deg);"></div>
+        <div class="tick" style="transform: rotate(180deg);"></div>
+        <div class="tick" style="transform: rotate(210deg);"></div>
+        <div class="tick" style="transform: rotate(240deg);"></div>
+        <div class="tick" style="transform: rotate(270deg);"></div>
+        <div class="tick" style="transform: rotate(300deg);"></div>
+        <div class="tick" style="transform: rotate(330deg);"></div>
 
-            const hourHand = document.getElementById('hourHand');
-            const minuteHand = document.getElementById('minuteHand');
-            const secondHand = document.getElementById('secondHand');
+    </div>
 
-            setClock();
-            setInterval(setClock, 1000);
-        </script>
-    </body>
+    <script>
+        const secondHand = document.getElementById('second-hand');
+        const minuteHand = document.getElementById('minute-hand');
+        const hourHand = document.getElementById('hour-hand');
 
-    </html>
+        function setClock() {
+            const currentDate = new Date();
+            const secondsRatio = currentDate.getSeconds() / 60;
+            const minutesRatio = (secondsRatio + currentDate.getMinutes()) / 60;
+            const hoursRatio = (minutesRatio + currentDate.getHours()) / 12;
+
+            secondHand.style.transform = `rotate(${secondsRatio * 360}deg)`;
+            minuteHand.style.transform = `rotate(${minutesRatio * 360}deg)`;
+            hourHand.style.transform = `rotate(${hoursRatio * 360}deg)`;
+        }
+
+        setInterval(setClock, 1000);
+        setClock();  // Initialize clock on load
+    </script>
+</body>
+
+</html>

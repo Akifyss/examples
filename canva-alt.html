@@ -5,65 +5,118 @@
         style="position: absolute; left: -16px; top: -16px; cursor: move;"></span>
 
         <!DOCTYPE html>
-        <html lang="zh">
+        <html lang="zh-CN">
+        
         <head>
             <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>数字键盘</title>
+            <title>仿真时钟</title>
+            <script src="https://cdn.tailwindcss.com"></script>
             <style>
                 :root {
                     --uiWidth: 300px;
                     --uiHeight: 300px;
                 }
-                body, html {
-                    width: 100%;
-                    height: 100%;
-                    margin: 0;
-                    padding: 0;
+        
+                body {
                     display: flex;
                     justify-content: center;
                     align-items: center;
+                    width: 100vw;
+                    height: 100vh;
+                    margin: 0;
                 }
-                #ui-container {
+        
+                #clock {
                     width: var(--uiWidth);
                     height: var(--uiHeight);
-                    display: grid;
-                    grid-template-columns: repeat(3, 1fr);
+                    display: flex;
                     align-items: center;
-                    justify-items: center;
-                    gap: 10px;
-                    padding: 10px;
+                    justify-content: center;
+                    background-color: #f3f4f6;
+                    border-radius: 50%;
+                    border: 5px solid #1f2937;
+                    position: relative;
                 }
-                #ui-container button {
-                    width: 100%;
-                    height: 100%;
-                    background-color: #4CAF50;
-                    color: white;
-                    font-size: 16px;
-                    border: none;
+        
+                .hand {
+                    position: absolute;
+                    bottom: 50%;
+                    background-color: #1f2937;
                     border-radius: 5px;
-                    cursor: pointer;
-                    transition: background-color 0.3s;
+                    transform-origin: 50% 100%;
                 }
-                #ui-container button:hover {
-                    background-color: #45a049;
+        
+                #hour-hand {
+                    width: 6%;
+                    height: 20%;
+                }
+        
+                #minute-hand {
+                    width: 4%;
+                    height: 30%;
+                }
+        
+                #second-hand {
+                    width: 2%;
+                    height: 35%;
+                    background-color: #ef4444;
+                }
+        
+                #shaft {
+                    width: 10%;
+                    height: 10%;
+                    background-color: #1f2937;
+                    border-radius: 50%;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                }
+        
+                #shaft0 {
+                    width: 5%;
+                    height: 5%;
+                    background-color: #ef4444;
+                    border-radius: 50%;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
                 }
             </style>
-            <script src="https://cdn.tailwindcss.com"></script>
         </head>
+        
         <body>
-            <div id="ui-container">
-                <button id="btn1">1</button>
-                <button id="btn2">2</button>
-                <button id="btn3">3</button>
-                <button id="btn4">4</button>
-                <button id="btn5">5</button>
-                <button id="btn6">6</button>
-                <button id="btn7">7</button>
-                <button id="btn8">8</button>
-                <button id="btn9">9</button>
+            <div id="clock">
+                <div id="shaft"></div>
+                <div id="hour-hand" class="hand"></div>
+                <div id="minute-hand" class="hand"></div>
+                <div id="second-hand" class="hand"></div>
+                <div id="shaft0"></div>
+        
             </div>
+        
+            <script>
+                const secondHand = document.getElementById('second-hand');
+                const minuteHand = document.getElementById('minute-hand');
+                const hourHand = document.getElementById('hour-hand');
+        
+                function setClock() {
+                    const currentDate = new Date();
+                    const secondsRatio = currentDate.getSeconds() / 60;
+                    const minutesRatio = (secondsRatio + currentDate.getMinutes()) / 60;
+                    const hoursRatio = (minutesRatio + currentDate.getHours()) / 12;
+        
+                    secondHand.style.transform = `rotate(${secondsRatio * 360}deg)`;
+                    minuteHand.style.transform = `rotate(${minutesRatio * 360}deg)`;
+                    hourHand.style.transform = `rotate(${hoursRatio * 360}deg)`;
+                }
+        
+                setInterval(setClock, 1000);
+                setClock();  // Initialize clock on load
+            </script>
         </body>
+        
         </html>
 </div>
 

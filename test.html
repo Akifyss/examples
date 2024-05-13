@@ -1,213 +1,90 @@
 <!DOCTYPE html>
-<html lang="zh">
-
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>笔记应用</title>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-    <script src="https://code.iconify.design/2/2.1.0/iconify.min.js"></script>
-    <style>
-        body {
-            font-family: 'Open Sans', sans-serif;
-        }
-
-        .app-container {
-            width: 1200px;
-            height: 720px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .sidebar {
-            background-color: #F7FAFC;
-            border-right: 1px solid #cccccc;
-        }
-
-        .note-editor {
-            background-color: #FFFFFF;
-        }
-
-        #editor {
-            border: none;
-        }
-
-        .quill .ql-toolbar.ql-snow,
-        .quill .ql-container.ql-snow {
-            border: none;
-        }
-
-        .note-list-item {
-            position: relative;
-        }
-
-        .note-action {
-            display: none;
-        }
-
-        .note-list-item:hover .note-action:first-child {
-            display: block;
-            position: absolute;
-            right: 6px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .note-list-item:hover .note-action:last-child {
-            display: block;
-            position: absolute;
-            right: 24px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>计时器</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
+  <style>
+    :root {
+      --defaultWidth: 300px;
+      --defaultHeight: 200px;
+      --uiWidth: 100%;
+      --uiHeight: 100%;
+    }
+  </style>
 </head>
-
-<body>
-    <div class="app-container">
-        <aside class="sidebar w-1/4 px-5 py-8 overflow-y-auto">
-            <div class="mb-6">
-                <input type="text" placeholder="搜索笔记..." class="w-full px-4 py-2 rounded border-2 border-blue-500" id="searchInput" onkeyup="filterNotes()">
-            </div>
-            <div class="flex mb-4">
-                <button onclick="createNote()" class="w-full py-2 bg-blue-500 text-white rounded flex justify-center items-center">
-                    <span class="iconify mr-2" data-icon="akar-icons:circle-plus-fill"></span> 新建笔记
-                </button>
-            </div>
-            <ul id="noteList" class="note-list">
-                <!-- 动态填充 -->
-            </ul>
-        </aside>
-        <main class="flex-1 flex flex-col">
-            <div class="note-editor p-8 flex-1">
-                <div id="editor"></div>
-            </div>
-        </main>
-        <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-        <script>
-            var quill = new Quill('#editor', {
-                theme: 'snow',
-                modules: {
-                    toolbar: [
-                        [{ 'header': [1, 2, false] }],
-                        ['bold', 'italic', 'underline', 'strike'],
-                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                        ['link', 'image'],
-                        [{ 'align': [] }],
-                        ['clean']
-                    ]
-                },
-                placeholder: '开始创作你的笔记...',
-                readOnly: false
-            });
-
-            let notes = JSON.parse(localStorage.getItem('notes')) || [];
-            let selectedNoteIndex = null;
-
-            function saveNotesToLocalStorage() {
-                localStorage.setItem('notes', JSON.stringify(notes));
-            }
-
-            function createNote() {
-                const note = {
-                    id: Date.now(),
-                    content: '',
-                    name: `笔记 ${Date.now()}`
-                };
-                notes.push(note);
-                saveNotesToLocalStorage();
-                renderNotes();
-                selectNote(note.id);
-            }
-
-            function deleteNote(id) {
-                notes = notes.filter(note => note.id !== id);
-                saveNotesToLocalStorage();
-                renderNotes();
-                if (selectedNoteIndex !== null && notes[selectedNoteIndex] && notes[selectedNoteIndex].id === id) {
-                    quill.setContents([]);
-                    selectedNoteIndex = null;
-                }
-            }
-
-            quill.on('text-change', function (delta, oldDelta, source) {
-                if (source === 'user' && selectedNoteIndex !== null && notes[selectedNoteIndex]) {
-                    notes[selectedNoteIndex].content = quill.getContents();
-                    saveNotesToLocalStorage();
-                }
-            });
-
-            function selectNote(id) {
-                const noteIndex = notes.findIndex(note => note.id === id);
-                if (noteIndex !== -1) {
-                    quill.setContents(notes[noteIndex].content);
-                    selectedNoteIndex = noteIndex;
-                    highlightSelectedNote();
-                }
-            }
-
-            function renderNotes() {
-                const list = document.getElementById('noteList');
-                list.innerHTML = '';
-                notes.forEach((note, index) => {
-                    const li = document.createElement('li');
-                    li.setAttribute('contenteditable', false);
-                    li.innerHTML = `${note.name} <span class="note-action iconify" data-icon="mdi:rename-box" onclick="renameNote(${note.id}, this.parentElement)"></span> <span class="note-action iconify" data-icon="fluent:delete-24-filled" onclick="deleteNote(${note.id})"></span>`;
-                    li.className = 'note-list-item mb-2 px-2 py-1 rounded cursor-pointer hover:bg-gray-100';
-                    li.onclick = () => selectNote(note.id);
-                    list.appendChild(li);
-                    if (selectedNoteIndex === index) {
-                        li.classList.add('bg-blue-100');
-                    }
-                });
-            }
-
-            function renameNote(id, element) {
-                element.setAttribute('contenteditable', true);
-                element.focus();
-                element.onblur = () => {
-                    element.setAttribute('contenteditable', false);
-                    const noteIndex = notes.findIndex(note => note.id === id);
-                    if (noteIndex !== -1) {
-                        notes[noteIndex].name = element.textContent.trim();
-                        saveNotesToLocalStorage();
-                        renderNotes();
-                    }
-                };
-            }
-
-            function highlightSelectedNote() {
-                const listItems = document.querySelectorAll('#noteList li');
-                listItems.forEach((item, index) => {
-                    item.classList.remove('bg-blue-100');
-                    if (selectedNoteIndex === index) {
-                        item.classList.add('bg-blue-100');
-                    }
-                });
-            }
-
-            function filterNotes() {
-                const input = document.getElementById('searchInput');
-                const filter = input.value.toUpperCase();
-                const ul = document.getElementById('noteList');
-                const li = ul.getElementsByTagName('li');
-
-                for (let i = 0; i < li.length; i++) {
-                    let txtValue = li[i].textContent || li[i].innerText;
-                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                        li[i].style.display = "";
-                    } else {
-                        li[i].style.display = "none";
-                    }
-                }
-            }
-
-            renderNotes();
-        </script>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+  <div id="timerContainer" class="bg-white rounded-lg shadow-md p-4 flex flex-col items-center" style="width: var(--uiWidth); height: var(--uiHeight);">
+    <h1 id="timerTitle" class="text-2xl font-bold mb-4">计时器</h1>
+    <div id="timeDisplay" class="text-6xl font-bold mb-4">
+      <span id="minutes">00</span>:<span id="seconds">00</span>.<span id="milliseconds">00</span>
     </div>
-</body>
+    <div id="controls" class="flex space-x-4">
+      <button id="startButton" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        <iconify-icon icon="ic:round-play-arrow"></iconify-icon>
+      </button>
+      <button id="pauseButton" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+        <iconify-icon icon="ic:round-pause"></iconify-icon>
+      </button>
+      <button id="resetButton" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+        <iconify-icon icon="ic:round-replay"></iconify-icon>
+      </button>
+    </div>
+  </div>
+  <script>
+    const minutesDisplay = document.getElementById('minutes');
+    const secondsDisplay = document.getElementById('seconds');
+    const millisecondsDisplay = document.getElementById('milliseconds');
+    const startButton = document.getElementById('startButton');
+    const pauseButton = document.getElementById('pauseButton');
+    const resetButton = document.getElementById('resetButton');
 
+    let totalSeconds = 0;
+    let totalMilliseconds = 0;
+    let intervalId = null;
+
+    function formatMilliseconds(milliseconds) {
+      return milliseconds.toString().padStart(2, '0');
+    }
+
+    function formatTime(time) {
+      const minutes = Math.floor(time / 60);
+      const seconds = time % 60;
+      return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    function startTimer() {
+      if (intervalId === null) {
+        intervalId = setInterval(() => {
+          totalMilliseconds += 10;
+          totalSeconds++;
+          const formattedTime = formatTime(totalSeconds);
+          const formattedMilliseconds = formatMilliseconds(totalMilliseconds % 1000 / 10);
+          minutesDisplay.textContent = formattedTime.split(':')[0];
+          secondsDisplay.textContent = formattedTime.split(':')[1];
+          millisecondsDisplay.textContent = formattedMilliseconds;
+        }, 1000);
+      }
+    }
+
+    function pauseTimer() {
+      clearInterval(intervalId);
+      intervalId = null;
+    }
+
+    function resetTimer() {
+      pauseTimer();
+      totalSeconds = 0;
+      minutesDisplay.textContent = '00';
+      secondsDisplay.textContent = '00';
+      millisecondsDisplay.textContent = '00';
+    }
+
+    startButton.addEventListener('click', startTimer);
+    pauseButton.addEventListener('click', pauseTimer);
+    resetButton.addEventListener('click', resetTimer);
+  </script>
+</body>
 </html>
