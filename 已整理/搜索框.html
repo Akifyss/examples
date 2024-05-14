@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,7 @@
             --uiWidth: var(--defaultWidth);
             --uiHeight: var(--defaultHeight);
         }
+
         #search-container {
             width: var(--uiWidth);
             height: var(--uiHeight);
@@ -21,6 +23,7 @@
             border-radius: 30px;
             padding: 10px;
         }
+
         #search-input {
             width: 100%;
             border: none;
@@ -28,6 +31,7 @@
             font-size: 16px;
             padding-left: 10px;
         }
+
         iconify-icon {
             cursor: pointer;
             color: grey;
@@ -36,6 +40,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
 </head>
+
 <body>
     <div id="search-container">
         <input type="text" id="search-input" placeholder="请输入搜索内容...">
@@ -46,16 +51,14 @@
         const searchInput = document.getElementById('search-input');
         const searchIcon = document.getElementById('search-icon');
 
-        searchInput.addEventListener('input', function() {
+        searchInput.addEventListener('input', function () {
             if (searchInput.value.trim() !== '') {
                 searchIcon.style.color = '#3786f4';
-                searchIcon.addEventListener('click', function() {
-                    alert('进行搜索: ' + searchInput.value);
-                });
             } else {
                 searchIcon.style.color = 'grey';
             }
         });
     </script>
 </body>
+
 </html>

@@ -4,6 +4,7 @@
     <span class="iconify drag-icon" data-icon="grommet-icons:drag"
         style="position: absolute; left: -16px; top: -16px; cursor: move;"></span>
 
+
         <!DOCTYPE html>
         <html lang="zh-CN">
         
@@ -14,8 +15,8 @@
             <script src="https://cdn.tailwindcss.com"></script>
             <style>
                 :root {
-                    --uiWidth: 200px;
-                    --uiHeight: 200px;
+                    --uiWidth: 80px;
+                    --uiHeight: 80px;
                 }
         
                 #spinner {
@@ -54,12 +55,15 @@
         </body>
         
         </html>
+        
+        </div>
+
 </div>
 
 </div>
 <style>
     .container {
-        border: 2px solid #3786f4;
+
         box-sizing: content-box;
         position: absolute;
         z-index: 1000;
@@ -300,4 +304,28 @@
             document.getElementById('selectedElementName').value = ''; // 清除textarea中的内容
         }
     });
+</script>
+
+<script src="https://unpkg.com/html-to-image"></script>
+<script>
+    document.body.ondblclick = function() {
+        var node = document.getElementById('content-to-capture');
+
+        htmlToImage.toPng(node)
+            .then(function (dataUrl) {
+                // Create a link and set the URL as the href
+                var link = document.createElement('a');
+                link.download = 'html-capture.png';
+                link.href = dataUrl;
+                // Append the link to the body
+                document.body.appendChild(link);
+                // Trigger the download
+                link.click();
+                // Clean up
+                document.body.removeChild(link);
+            })
+            .catch(function (error) {
+                console.error('Oops, something went wrong!', error);
+            });
+    };
 </script>
