@@ -7,88 +7,149 @@
 
 
         <!DOCTYPE html>
-        <html lang="zh">
+        <html lang="zh-CN">
         <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>移动端聊天界面</title>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
-        <style>
-            :root {
-                --uiWidth: 320px;
-                --uiHeight: 720px;
-            }
-            html, body {
-                padding: 0;
-                margin: 0;
-                width: var(--uiWidth);
-                height: var(--uiHeight);
-            }
-        </style>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>清新音乐播放器</title>
+            <script src="https://cdn.tailwindcss.com"></script>
+            <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
+            <style>
+                :root {
+                    --uiWidth: 600px;
+                    --uiHeight: 400px;
+                }
+            </style>
         </head>
-        <body>
-        <div id="chat-container" class="flex flex-col h-full bg-gray-100">
-            <header id="chat-header" class="bg-blue-600 text-white p-4 flex items-center">
-                <iconify-icon icon="mdi:arrow-left" class="text-2xl mr-4"></iconify-icon>
-                <div id="chat-title" class="flex-1">聊天</div>
-                <iconify-icon icon="mdi:dots-vertical" class="text-2xl"></iconify-icon>
-            </header>
-            <main id="chat-content" class="flex-1 p-4 overflow-auto">
-                <div id="message-1" class="mb-4">
-                    <div class="bg-white p-3 rounded-lg shadow-sm max-w-full">
-                        你好！今天的工作进展得如何？
+        <body class="flex items-center justify-center h-screen bg-gradient-to-r from-teal-400 via-sky-500 to-indigo-600">
+            <div id="player-container" class="w-full h-full bg-white bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-30 text-gray-100 rounded-lg shadow-lg p-6" style="max-width: var(--uiWidth); max-height: var(--uiHeight); border: 1px solid rgba(255, 255, 255, 0.3);">
+                <div id="player-header" class="flex flex-col justify-between items-center mb-6">
+                    <div id="player-info" class="text-center">
+                        <p id="current-title" class="text-2xl font-bold tracking-wide">Shadows of the Holler</p>
+                        <p id="current-time" class="text-sm text-gray-200">00:00 / 00:00</p>
                     </div>
-                    <div class="text-xs text-gray-500 mt-1">10:35 AM</div>
                 </div>
-                <div id="message-2" class="mb-4 text-right">
-                    <div class="bg-blue-500 text-white p-3 rounded-lg shadow-sm ml-auto max-w-full">
-                        进展顺利，谢谢你。你呢？
-                    </div>
-                    <div class="text-xs text-gray-500 mt-1">10:37 AM</div>
+                <div id="player-controls" class="flex items-center justify-center mb-6 space-x-8">
+                    <button id="prev-btn" class="focus:outline-none bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-full">
+                        <iconify-icon icon="ic:baseline-skip-previous" width="32" height="32"></iconify-icon>
+                    </button>
+                    <button id="play-btn" class="focus:outline-none bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full">
+                        <iconify-icon icon="ic:baseline-play-circle-outline" width="48" height="48"></iconify-icon>
+                    </button>
+                    <button id="next-btn" class="focus:outline-none bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-full">
+                        <iconify-icon icon="ic:baseline-skip-next" width="32" height="32"></iconify-icon>
+                    </button>
                 </div>
-                <div id="message-3" class="mb-4">
-                    <div class="bg-white p-3 rounded-lg shadow-sm max-w-full">
-                        我也很好，期待今天的会议。
-                    </div>
-                    <div class="text-xs text-gray-500 mt-1">10:40 AM</div>
+                <div id="player-progress" class="w-full bg-gray-700 h-2 rounded mb-4 relative">
+                    <div id="progress-bar" class="bg-green-500 h-2 rounded" style="width: 0;"></div>
                 </div>
-            </main>
-            <div id="chat-input" class="p-4 bg-white border-t flex items-center">
-                <input id="message-input" type="text" placeholder="输入消息..." class="flex-1 p-2 border rounded-lg shadow-inner" />
-                <button id="send-button" class="ml-4 bg-blue-600 text-white p-2 rounded-lg">
-                    <iconify-icon icon="mdi:send" class="text-xl"></iconify-icon>
-                </button>
+                <div id="track-list" class="mt-6">
+                    <p class="font-semibold text-lg mb-2">播放列表：</p>
+                    <ul>
+                        <li class="track px-4 py-2 hover:bg-gray-600 cursor-pointer rounded" data-src="https://cdn1.suno.ai/6a6bdd56-d583-4e0a-9869-b98a8c72a37b.mp3" data-title="Shadows of the Holler">1. Shadows of the Holler</li>
+                        <li class="track px-4 py-2 hover:bg-gray-600 cursor-pointer rounded" data-src="https://cdn1.suno.ai/a5e2198a-f352-4abb-9a24-7f81b143ded3.mp3" data-title="Stone">2. Stone</li>
+                        <li class="track px-4 py-2 hover:bg-gray-600 cursor-pointer rounded" data-src="https://cdn1.suno.ai/19807561-1427-4c25-a229-a8c3063d0616.mp3" data-title="Egyptian Dance Party">3. Egyptian Dance Party</li>
+                    </ul>
+                </div>
+                <audio id="audio" src="https://cdn1.suno.ai/6a6bdd56-d583-4e0a-9869-b98a8c72a37b.mp3" preload="auto"></audio>
             </div>
-        </div>
-        <script type="module">
-            const sendButton = document.getElementById('send-button');
-            const messageInput = document.getElementById('message-input');
-            const chatContent = document.getElementById('chat-content');
         
-            sendButton.addEventListener('click', () => {
-                const messageText = messageInput.value.trim();
-                if (messageText) {
-                    const messageDiv = document.createElement('div');
-                    messageDiv.className = "mb-4 text-right";
-                    messageDiv.innerHTML = `
-                        <div class="bg-blue-500 text-white p-3 rounded-lg shadow-sm ml-auto max-w-full">
-                            ${messageText}
-                        </div>
-                        <div class="text-xs text-gray-500 mt-1">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
-                    `;
-                    chatContent.appendChild(messageDiv);
-                    chatContent.scrollTop = chatContent.scrollHeight;
-                    messageInput.value = '';
-                }
-            });
+            <script type="text/javascript">
+                const audio = document.getElementById('audio');
+                const playBtn = document.getElementById('play-btn');
+                const prevBtn = document.getElementById('prev-btn');
+                const nextBtn = document.getElementById('next-btn');
+                const progressBar = document.getElementById('progress-bar');
+                const currentTitle = document.getElementById('current-title');
+                const currentTime = document.getElementById('current-time');
+                const tracks = document.querySelectorAll('.track');
         
-            messageInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    sendButton.click();
+                let isPlaying = false;
+                let currentTrackIndex = 0;
+                const trackList = [
+                    {
+                        src: "https://cdn1.suno.ai/6a6bdd56-d583-4e0a-9869-b98a8c72a37b.mp3",
+                        title: "Shadows of the Holler"
+                    },
+                    {
+                        src: "https://cdn1.suno.ai/a5e2198a-f352-4abb-9a24-7f81b143ded3.mp3",
+                        title: "Stone"
+                    },
+                    {
+                        src: "https://cdn1.suno.ai/19807561-1427-4c25-a229-a8c3063d0616.mp3",
+                        title: "Egyptian Dance Party"
+                    }
+                ];
+        
+                playBtn.addEventListener('click', () => {
+                    if (isPlaying) {
+                        audio.pause();
+                        playBtn.firstElementChild.setAttribute("icon", "ic:baseline-play-circle-outline");
+                    } else {
+                        audio.play();
+                        playBtn.firstElementChild.setAttribute("icon", "ic:baseline-pause-circle-outline");
+                    }
+                    isPlaying = !isPlaying;
+                });
+        
+                prevBtn.addEventListener('click', () => {
+                    currentTrackIndex = (currentTrackIndex - 1 + trackList.length) % trackList.length;
+                    loadTrack(currentTrackIndex);
+                    audio.play();
+                    isPlaying = true;
+                    playBtn.firstElementChild.setAttribute("icon", "ic:baseline-pause-circle-outline");
+                });
+        
+                nextBtn.addEventListener('click', () => {
+                    currentTrackIndex = (currentTrackIndex + 1) % trackList.length;
+                    loadTrack(currentTrackIndex);
+                    const playPromise = audio.play();
+                    if (playPromise !== undefined) {
+                        playPromise.then(() => {}).catch(error => {
+                            console.error(error);
+                        });
+                    }
+                    isPlaying = true;
+                    playBtn.firstElementChild.setAttribute("icon", "ic:baseline-pause-circle-outline");
+                });
+        
+                audio.addEventListener('timeupdate', () => {
+                    const current = audio.currentTime;
+                    const duration = audio.duration;
+                    progressBar.style.width = (current / duration) * 100 + '%';
+                    currentTime.textContent = `${formatTime(current)} / ${formatTime(duration)}`;
+                });
+        
+                function loadTrack(index) {
+                    const track = trackList[index];
+                    audio.src = track.src;
+                    currentTitle.textContent = `${track.title}`;
+                    audio.load();
                 }
-            });
-        </script>
+        
+                function formatTime(time) {
+                    const minutes = Math.floor(time / 60);
+                    const seconds = Math.floor(time % 60).toString().padStart(2, '0');
+                    return `${minutes}:${seconds}`;
+                }
+        
+                tracks.forEach((track, index) => {
+                    track.addEventListener('click', () => {
+                        currentTrackIndex = index;
+                        loadTrack(currentTrackIndex);
+                        const playPromise = audio.play();
+                        if (playPromise !== undefined) {
+                            playPromise.then(() => {}).catch(error => {
+                                console.error(error);
+                            });
+                        }
+                        isPlaying = true;
+                        playBtn.firstElementChild.setAttribute("icon", "ic:baseline-pause-circle-outline");
+                    });
+                });
+        
+                loadTrack(currentTrackIndex);
+            </script>
         </body>
         </html>
         
