@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>移动端聊天界面</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
+    <style>
+        :root {
+            --uiWidth: 375px;
+            --uiHeight: 720px;
+        }
+
+        html,
+        body {
+            padding: 0;
+            margin: 0;
+            width: var(--uiWidth);
+            height: var(--uiHeight);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="chat-container" class="flex flex-col h-full bg-gray-100">
+        <header id="chat-header" class="bg-blue-600 text-white p-4 flex items-center">
+            <iconify-icon icon="mdi:arrow-left" class="text-2xl mr-4"></iconify-icon>
+            <div id="chat-title" class="flex-1">聊天</div>
+            <iconify-icon icon="mdi:dots-vertical" class="text-2xl"></iconify-icon>
+        </header>
+        <main id="chat-content" class="flex-1 p-4 overflow-auto">
+            <div id="message-1" class="mb-4 flex items-start">
+                <img src="https://source.unsplash.com/random/50x50/?avatar" alt="avatar"
+                    class="w-10 h-10 rounded-full mr-3 self-start">
+                <div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm max-w-xs">
+                        你好！今天的工作进展得如何？
+                    </div>
+                    <div class="text-xs text-gray-500 mt-1">10:35</div>
+                </div>
+            </div>
+            <div id="message-2" class="mb-4 flex items-start justify-end text-right">
+                <div>
+                    <div class="bg-blue-500 text-white p-3 rounded-lg shadow-sm max-w-xs ml-auto">
+                        进展顺利，谢谢你。你呢？
+                    </div>
+                    <div class="text-xs text-gray-500 mt-1">10:37</div>
+                </div>
+                <img src="https://source.unsplash.com/random/50x50/?people" alt="avatar"
+                    class="w-10 h-10 rounded-full ml-3 self-start">
+            </div>
+            <div id="message-3" class="mb-4 flex items-start">
+                <img src="https://source.unsplash.com/random/50x50/?avatar" alt="avatar"
+                    class="w-10 h-10 rounded-full mr-3 self-start">
+                <div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm max-w-xs">
+                        我也很好，期待今天的会议。
+                    </div>
+                    <div class="text-xs text-gray-500 mt-1">10:40</div>
+                </div>
+            </div>
+        </main>
+        <div id="chat-input" class="p-4 bg-white border-t flex items-center">
+            <input id="message-input" type="text" placeholder="输入消息..."
+                class="flex-1 p-2 border rounded-lg shadow-inner" />
+            <button id="send-button"
+                class="ml-4 bg-blue-600 text-white p-2 rounded-lg w-10 h-10 flex items-center justify-center">
+                <iconify-icon icon="mdi:send" class="text-xl"></iconify-icon>
+            </button>
+        </div>
+    </div>
+    <script type="module">
+        const sendButton = document.getElementById('send-button');
+        const messageInput = document.getElementById('message-input');
+        const chatContent = document.getElementById('chat-content');
+
+        sendButton.addEventListener('click', () => {
+            const messageText = messageInput.value.trim();
+            if (messageText) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = "mb-4 flex items-start justify-end text-right";
+                messageDiv.innerHTML = `
+                <div>
+                    <div class="bg-blue-500 text-white p-3 rounded-lg shadow-sm max-w-xs ml-auto">
+                        ${messageText}
+                    </div>
+                    <div class="text-xs text-gray-500 mt-1">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                </div>
+                <img src="https://source.unsplash.com/random/50x50/?people" alt="avatar" class="w-10 h-10 rounded-full ml-3 self-start">
+            `;
+                chatContent.appendChild(messageDiv);
+                chatContent.scrollTop = chatContent.scrollHeight;
+                messageInput.value = '';
+            }
+        });
+
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendButton.click();
+            }
+        });
+    </script>
+</body>
+
+</html>

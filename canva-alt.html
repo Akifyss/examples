@@ -7,240 +7,89 @@
 
 
         <!DOCTYPE html>
-        <html lang="zh-cn">
-        
+        <html lang="zh">
         <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>2048 游戏</title>
-            <script src="https://cdn.tailwindcss.com"></script>
-            <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
-            <style>
-                :root {
-                    --uiWidth: 600px;
-                    --uiHeight: 760px;
-                }
-        
-                body {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    height: 100vh;
-                    margin: 0;
-                }
-        
-                #gameContainer {
-                    border: 2px solid #854d0e;
-                    border-radius: 10px;
-                    width: var(--uiWidth);
-                    height: var(--uiHeight);
-                    background-color: #faf8ef;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: space-between;
-                    align-items: center;
-                    padding: 20px;
-                }
-        
-                #container {
-                    width: 100%;
-                }
-        
-                .grid-container {
-                    display: grid;
-                    grid-template-columns: repeat(4, 1fr);
-                    grid-template-rows: repeat(4, 1fr);
-                    gap: 10px;
-                    width: 100%;
-                    aspect-ratio: 1 / 1;
-                    background-color: #bbada0;
-                    border-radius: 10px;
-                    padding: 12px;
-                }
-        
-                .grid-item {
-                    background-color: #cdc1b4;
-                    border-radius: 10px;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    font-size: 2rem;
-                    font-weight: bold;
-                    color: #776e65;
-                    user-select: none;
-                }
-            </style>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>移动端聊天界面</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
+        <style>
+            :root {
+                --uiWidth: 320px;
+                --uiHeight: 720px;
+            }
+            html, body {
+                padding: 0;
+                margin: 0;
+                width: var(--uiWidth);
+                height: var(--uiHeight);
+            }
+        </style>
         </head>
-        
         <body>
-            <div id="gameContainer">
-                <div id="container" class="flex flex-col items-center">
-                    <h1 class="text-4xl font-bold mb-4 text-yellow-900">2048</h1>
-        
-                    <div class="flex justify-between items-center w-full mb-4">
-                        <div class="flex flex-col items-start">
-                            <div id="score" class="text-2xl font-bold text-yellow-600">分数: 0</div>
-                            <div id="bestScore" class="text-2xl font-bold text-yellow-400">最高分: 0</div>
-                        </div>
-                        <div class="text-gray-700 text-sm mb-4">使用方向键来移动方块。</div>
-                        <button id="restart" class="px-4 py-2 bg-yellow-800 text-white rounded">重新开始</button>
+        <div id="chat-container" class="flex flex-col h-full bg-gray-100">
+            <header id="chat-header" class="bg-blue-600 text-white p-4 flex items-center">
+                <iconify-icon icon="mdi:arrow-left" class="text-2xl mr-4"></iconify-icon>
+                <div id="chat-title" class="flex-1">聊天</div>
+                <iconify-icon icon="mdi:dots-vertical" class="text-2xl"></iconify-icon>
+            </header>
+            <main id="chat-content" class="flex-1 p-4 overflow-auto">
+                <div id="message-1" class="mb-4">
+                    <div class="bg-white p-3 rounded-lg shadow-sm max-w-full">
+                        你好！今天的工作进展得如何？
                     </div>
+                    <div class="text-xs text-gray-500 mt-1">10:35 AM</div>
                 </div>
-                <div id="grid" class="grid-container">
-                    <div class="grid-item" id="tile-0-0"></div>
-                    <div class="grid-item" id="tile-0-1"></div>
-                    <div class="grid-item" id="tile-0-2"></div>
-                    <div class="grid-item" id="tile-0-3"></div>
-                    <div class="grid-item" id="tile-1-0"></div>
-                    <div class="grid-item" id="tile-1-1"></div>
-                    <div class="grid-item" id="tile-1-2"></div>
-                    <div class="grid-item" id="tile-1-3"></div>
-                    <div class="grid-item" id="tile-2-0"></div>
-                    <div class="grid-item" id="tile-2-1"></div>
-                    <div class="grid-item" id="tile-2-2"></div>
-                    <div class="grid-item" id="tile-2-3"></div>
-                    <div class="grid-item" id="tile-3-0"></div>
-                    <div class="grid-item" id="tile-3-1"></div>
-                    <div class="grid-item" id="tile-3-2"></div>
-                    <div class="grid-item" id="tile-3-3"></div>
+                <div id="message-2" class="mb-4 text-right">
+                    <div class="bg-blue-500 text-white p-3 rounded-lg shadow-sm ml-auto max-w-full">
+                        进展顺利，谢谢你。你呢？
+                    </div>
+                    <div class="text-xs text-gray-500 mt-1">10:37 AM</div>
                 </div>
+                <div id="message-3" class="mb-4">
+                    <div class="bg-white p-3 rounded-lg shadow-sm max-w-full">
+                        我也很好，期待今天的会议。
+                    </div>
+                    <div class="text-xs text-gray-500 mt-1">10:40 AM</div>
+                </div>
+            </main>
+            <div id="chat-input" class="p-4 bg-white border-t flex items-center">
+                <input id="message-input" type="text" placeholder="输入消息..." class="flex-1 p-2 border rounded-lg shadow-inner" />
+                <button id="send-button" class="ml-4 bg-blue-600 text-white p-2 rounded-lg">
+                    <iconify-icon icon="mdi:send" class="text-xl"></iconify-icon>
+                </button>
             </div>
-            <script type="module">
-                import { createApp } from 'https://cdn.skypack.dev/petite-vue?dts';
+        </div>
+        <script type="module">
+            const sendButton = document.getElementById('send-button');
+            const messageInput = document.getElementById('message-input');
+            const chatContent = document.getElementById('chat-content');
         
-                const COLORS = {
-                    2: "#eee4da",
-                    4: "#ede0c8",
-                    8: "#f2b179",
-                    16: "#f59563",
-                    32: "#f67c5f",
-                    64: "#f65e3b",
-                    128: "#edcf72",
-                    256: "#edcc61",
-                    512: "#edc850",
-                    1024: "#edc53f",
-                    2048: "#edc22e",
-                };
-        
-                let currentScore = 0;
-                let bestScore = 0;
-        
-                function startNewGame() {
-                    const gridElement = document.getElementById('grid');
-                    let grid = new Array(4).fill(null).map(() => new Array(4).fill(0));
-                    addNewNumber(grid);
-                    addNewNumber(grid);
-                    currentScore = 0;
-                    updateScore();
-                    updateGrid(gridElement, grid);
-                    return grid;
+            sendButton.addEventListener('click', () => {
+                const messageText = messageInput.value.trim();
+                if (messageText) {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = "mb-4 text-right";
+                    messageDiv.innerHTML = `
+                        <div class="bg-blue-500 text-white p-3 rounded-lg shadow-sm ml-auto max-w-full">
+                            ${messageText}
+                        </div>
+                        <div class="text-xs text-gray-500 mt-1">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                    `;
+                    chatContent.appendChild(messageDiv);
+                    chatContent.scrollTop = chatContent.scrollHeight;
+                    messageInput.value = '';
                 }
+            });
         
-                function updateGrid(element, grid) {
-                    for (let i = 0; i < 4; i++) {
-                        for (let j = 0; j < 4; j++) {
-                            const tile = document.getElementById(`tile-${i}-${j}`);
-                            tile.textContent = grid[i][j] === 0 ? "" : grid[i][j];
-                            tile.style.backgroundColor = grid[i][j] === 0 ? "#cdc1b4" : COLORS[grid[i][j]];
-                        }
-                    }
+            messageInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendButton.click();
                 }
-        
-                function addNewNumber(grid) {
-                    let emptyTiles = [];
-                    for (let i = 0; i < 4; i++) {
-                        for (let j = 0; j < 4; j++) {
-                            if (grid[i][j] === 0) {
-                                emptyTiles.push([i, j]);
-                            }
-                        }
-                    }
-                    const [x, y] = emptyTiles[Math.floor(Math.random() * emptyTiles.length)];
-                    grid[x][y] = Math.random() < 0.9 ? 2 : 4;
-                }
-        
-                function updateScore() {
-                    document.getElementById('score').textContent = `分数: ${currentScore}`;
-                    if (currentScore > bestScore) {
-                        bestScore = currentScore;
-                        document.getElementById('bestScore').textContent = `最高分: ${bestScore}`;
-                    }
-                }
-        
-                function handleMove(grid, direction) {
-                    let hasMoved = false;
-                    function moveRowLeft(row) {
-                        let newRow = row.filter(num => num !== 0);
-                        while (newRow.length < 4) newRow.push(0);
-                        return newRow;
-                    }
-                    function combineRow(row) {
-                        for (let i = 0; i < 3; i++) {
-                            if (row[i] === row[i + 1]) {
-                                row[i] *= 2;
-                                currentScore += row[i];
-                                row[i + 1] = 0;
-                                hasMoved = true;
-                            }
-                        }
-                        return row.filter(num => num !== 0);
-                    }
-                    function moveAndCombine(row) {
-                        row = moveRowLeft(row);
-                        row = combineRow(row);
-                        row = moveRowLeft(row);
-                        return row;
-                    }
-                    if (["Left", "Right"].includes(direction)) {
-                        for (let i = 0; i < 4; i++) {
-                            let row = grid[i];
-                            if (direction === "Right") row = row.reverse();
-                            row = moveAndCombine(row);
-                            if (direction === "Right") row = row.reverse();
-                            grid[i] = row;
-                        }
-                    } else {
-                        for (let j = 0; j < 4; j++) {
-                            let column = grid.map(row => row[j]);
-                            if (direction === "Down") column = column.reverse();
-                            column = moveAndCombine(column);
-                            if (direction === "Down") column = column.reverse();
-                            for (let i = 0; i < 4; i++) {
-                                grid[i][j] = column[i];
-                            }
-                        }
-                    }
-                    if (hasMoved) {
-                        addNewNumber(grid);
-                        updateScore();
-                        updateGrid(document.getElementById('grid'), grid);
-                    }
-                    return hasMoved;
-                }
-        
-                let currentGrid = startNewGame();
-                document.addEventListener('keydown', (e) => {
-                    let moved = false;
-                    switch (e.key) {
-                        case "ArrowUp": moved = handleMove(currentGrid, "Up"); break;
-                        case "ArrowDown": moved = handleMove(currentGrid, "Down"); break;
-                        case "ArrowLeft": moved = handleMove(currentGrid, "Left"); break;
-                        case "ArrowRight": moved = handleMove(currentGrid, "Right"); break;
-                    }
-                    if (moved) {
-                        updateGrid(document.getElementById('grid'), currentGrid);
-                    }
-                });
-        
-                document.getElementById('restart').addEventListener('click', () => {
-                    currentGrid = startNewGame();
-                });
-        
-                // Set initial best score
-                document.getElementById('bestScore').textContent = `最高分: ${bestScore}`;
-            </script>
+            });
+        </script>
         </body>
-        
         </html>
         
 
