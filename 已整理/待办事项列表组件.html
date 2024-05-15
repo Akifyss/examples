@@ -78,7 +78,7 @@
             <div class="input-group">
                 <input id="taskInput" type="text" placeholder="添加新任务..."
                     class="task-input w-full p-2 border rounded-t-lg" autofocus>
-                <button class="add-btn">
+                <button class="add-btn" id="addButton">
                     <iconify-icon icon="akar-icons:circle-plus-fill"
                         style="color: #5ec16a; font-size: 24px;"></iconify-icon>
                 </button>
@@ -96,28 +96,15 @@
         const taskInput = document.getElementById('taskInput');
         const prioritySelect = document.getElementById('prioritySelect');
         const taskList = document.getElementById('taskList');
-        const addButton = document.querySelector('.add-btn');
-        const storageKey = 'todoTasks';
+        const addButton = document.getElementById("addButton");
+
+        const initialTasks = [
+            { text: '示例任务', priority: 'Medium', completed: false }
+        ];
 
         const loadTasks = () => {
-            const tasks = JSON.parse(localStorage.getItem(storageKey)) || [];
-            if (tasks.length === 0) {
-                // 在初始状态下添加一个示例任务
-                tasks.push({ text: '示例任务', priority: 'Medium', completed: false });
-            }
+            const tasks = initialTasks; // Load initial tasks on page load
             tasks.forEach(task => addTask(task.text, task.priority, task.completed));
-        };
-
-        const saveTasks = () => {
-            const tasks = [];
-            taskList.querySelectorAll('li').forEach(li => {
-                tasks.push({
-                    text: li.querySelector('.task-content').textContent,
-                    priority: li.querySelector('.task-priority').value,
-                    completed: li.querySelector('.task-checkbox input').checked
-                });
-            });
-            localStorage.setItem(storageKey, JSON.stringify(tasks));
         };
 
         const addTask = (task, priority, completed = false) => {
@@ -144,31 +131,24 @@
 
             taskList.appendChild(li);
 
-            // Event listener for marking task as completed
             const checkboxButton = li.querySelector('.task-checkbox');
             checkboxButton.addEventListener('click', () => {
                 const iconify = checkboxButton.querySelector('iconify-icon');
                 const isChecked = iconify.icon === 'akar-icons:circle';
                 iconify.icon = isChecked ? 'akar-icons:circle-check-fill' : 'akar-icons:circle';
                 li.querySelector('.task-content').style.textDecoration = isChecked ? 'line-through' : 'none';
-                saveTasks();
             });
 
-            // Event listener for deleting a task
             const deleteButton = li.querySelector('.delete-task');
             deleteButton.addEventListener('click', () => {
                 taskList.removeChild(li);
-                saveTasks();
             });
-
-            saveTasks();
         };
 
         addButton.addEventListener('click', () => {
             if (taskInput.value.trim() !== '') {
                 addTask(taskInput.value.trim(), prioritySelect.value);
                 taskInput.value = ''; // Clear input field after adding task
-                saveTasks();
             }
         });
 
@@ -176,7 +156,6 @@
             if (e.key === 'Enter' && taskInput.value.trim() !== '') {
                 addTask(taskInput.value.trim(), prioritySelect.value);
                 taskInput.value = ''; // Clear input field after adding task
-                saveTasks();
             }
         });
 
@@ -185,6 +164,3 @@
 </body>
 
 </html>
-
-
-</div>

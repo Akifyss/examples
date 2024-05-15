@@ -106,12 +106,8 @@
             readOnly: false
         });
 
-        let notes = JSON.parse(localStorage.getItem('notes')) || [];
+        let notes = [];
         let selectedNoteIndex = null;
-
-        function saveNotesToLocalStorage() {
-            localStorage.setItem('notes', JSON.stringify(notes));
-        }
 
         function createNote() {
             const note = {
@@ -120,14 +116,12 @@
                 name: `笔记 ${Date.now()}`
             };
             notes.push(note);
-            saveNotesToLocalStorage();
             renderNotes();
             selectNote(note.id);
         }
 
         function deleteNote(id) {
             notes = notes.filter(note => note.id !== id);
-            saveNotesToLocalStorage();
             renderNotes();
             if (selectedNoteIndex !== null && notes[selectedNoteIndex] && notes[selectedNoteIndex].id === id) {
                 quill.setContents([]);
@@ -138,7 +132,6 @@
         quill.on('text-change', function (delta, oldDelta, source) {
             if (source === 'user' && selectedNoteIndex !== null && notes[selectedNoteIndex]) {
                 notes[selectedNoteIndex].content = quill.getContents();
-                saveNotesToLocalStorage();
             }
         });
 
@@ -157,6 +150,7 @@
             notes.forEach((note, index) => {
                 const li = document.createElement('li');
                 li.setAttribute('contenteditable', false);
+                li.id = `note-${note.id}`;
                 li.innerHTML = `${note.name} <span class="note-action iconify" data-icon="mdi:rename-box" onclick="renameNote(${note.id}, this.parentElement)"></span> <span class="note-action iconify" data-icon="fluent:delete-24-filled" onclick="deleteNote(${note.id})"></span>`;
                 li.className = 'note-list-item mb-2 px-2 py-1 rounded cursor-pointer hover:bg-gray-100';
                 li.onclick = () => selectNote(note.id);
@@ -175,7 +169,6 @@
                 const noteIndex = notes.findIndex(note => note.id === id);
                 if (noteIndex !== -1) {
                     notes[noteIndex].name = element.textContent.trim();
-                    saveNotesToLocalStorage();
                     renderNotes();
                 }
             };
