@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,50 +11,97 @@
             --uiWidth: 700px;
             --uiHeight: 500px;
         }
+
         .game-container {
             width: var(--uiWidth);
             height: var(--uiHeight);
         }
+
+        .hole {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+        }
+
+        .hammer-cursor {
+            cursor: url(""), auto !important;
+        }
+
+
+
+        .click-cursor.hammer-cursor {
+            cursor: url(""), auto !important;
+        }
+
+        .hit-feedback {
+            background-color: red;
+        }
+
+        .hit-popup {
+            position: absolute;
+            top: -20px;
+            font-size: 24px;
+            animation: popup 0.5s;
+        }
+
+        @keyframes popup {
+            0% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
     </style>
 </head>
-<body>
+
+<body class="hammer-cursor">
     <div class="game-container bg-white mx-auto mt-8 p-4 rounded shadow-lg flex flex-col items-center">
         <div id="score-board" class="w-full flex justify-between items-center mb-4 text-lg">
-            <span>时间: <span id="time" class="font-bold">30</span> 秒</span> 
+            <span>时间: <span id="time" class="font-bold">30</span> 秒</span>
             <span>得分: <span id="score" class="font-bold">0</span></span>
         </div>
         <div class="grid grid-cols-3 gap-4 w-full h-full">
-            <div id="hole-1" class="bg-gray-200 rounded-lg flex justify-center items-center relative cursor-pointer">
-                <iconify-icon icon="emojione:mouse" class="text-3xl hidden" id="mole-1"></iconify-icon>
+            <div id="hole-1" class="hole bg-gray-400 flex justify-center items-center relative">
+                <iconify-icon icon="emojione:mouse" class="text-6xl hidden" id="mole-1"></iconify-icon>
             </div>
-            <div id="hole-2" class="bg-gray-200 rounded-lg flex justify-center items-center relative cursor-pointer">
-                <iconify-icon icon="emojione:mouse" class="text-3xl hidden" id="mole-2"></iconify-icon>
+            <div id="hole-2" class="hole bg-gray-400 flex justify-center items-center relative">
+                <iconify-icon icon="emojione:mouse" class="text-6xl hidden" id="mole-2"></iconify-icon>
             </div>
-            <div id="hole-3" class="bg-gray-200 rounded-lg flex justify-center items-center relative cursor-pointer">
-                <iconify-icon icon="emojione:mouse" class="text-3xl hidden" id="mole-3"></iconify-icon>
+            <div id="hole-3" class="hole bg-gray-400 flex justify-center items-center relative">
+                <iconify-icon icon="emojione:mouse" class="text-6xl hidden" id="mole-3"></iconify-icon>
             </div>
-            <div id="hole-4" class="bg-gray-200 rounded-lg flex justify-center items-center relative cursor-pointer">
-                <iconify-icon icon="emojione:mouse" class="text-3xl hidden" id="mole-4"></iconify-icon>
+            <div id="hole-4" class="hole bg-gray-400 flex justify-center items-center relative">
+                <iconify-icon icon="emojione:mouse" class="text-6xl hidden" id="mole-4"></iconify-icon>
             </div>
-            <div id="hole-5" class="bg-gray-200 rounded-lg flex justify-center items-center relative cursor-pointer">
-                <iconify-icon icon="emojione:mouse" class="text-3xl hidden" id="mole-5"></iconify-icon>
+            <div id="hole-5" class="hole bg-gray-400 flex justify-center items-center relative">
+                <iconify-icon icon="emojione:mouse" class="text-6xl hidden" id="mole-5"></iconify-icon>
             </div>
-            <div id="hole-6" class="bg-gray-200 rounded-lg flex justify-center items-center relative cursor-pointer">
-                <iconify-icon icon="emojione:mouse" class="text-3xl hidden" id="mole-6"></iconify-icon>
+            <div id="hole-6" class="hole bg-gray-400 flex justify-center items-center relative">
+                <iconify-icon icon="emojione:mouse" class="text-6xl hidden" id="mole-6"></iconify-icon>
             </div>
-            <div id="hole-7" class="bg-gray-200 rounded-lg flex justify-center items-center relative cursor-pointer">
-                <iconify-icon icon="emojione:mouse" class="text-3xl hidden" id="mole-7"></iconify-icon>
+            <div id="hole-7" class="hole bg-gray-400 flex justify-center items-center relative">
+                <iconify-icon icon="emojione:mouse" class="text-6xl hidden" id="mole-7"></iconify-icon>
             </div>
-            <div id="hole-8" class="bg-gray-200 rounded-lg flex justify-center items-center relative cursor-pointer">
-                <iconify-icon icon="emojione:mouse" class="text-3xl hidden" id="mole-8"></iconify-icon>
+            <div id="hole-8" class="hole bg-gray-400 flex justify-center items-center relative">
+                <iconify-icon icon="emojione:mouse" class="text-6xl hidden" id="mole-8"></iconify-icon>
             </div>
-            <div id="hole-9" class="bg-gray-200 rounded-lg flex justify-center items-center relative cursor-pointer">
-                <iconify-icon icon="emojione:mouse" class="text-3xl hidden" id="mole-9"></iconify-icon>
+            <div id="hole-9" class="hole bg-gray-400 flex justify-center items-center relative">
+                <iconify-icon icon="emojione:mouse" class="text-6xl hidden" id="mole-9"></iconify-icon>
             </div>
         </div>
     </div>
 
     <script type="module">
+        document.body.addEventListener('mousedown', function () {
+            document.body.classList.add('click-cursor');
+        });
+
+        document.body.addEventListener('mouseup', function () {
+            document.body.classList.remove('click-cursor');
+        });
+
         const timeDisplay = document.getElementById('time');
         const scoreDisplay = document.getElementById('score');
         const holes = document.querySelectorAll('[id^="hole-"]');
@@ -63,10 +111,12 @@
         let currentHoleIndex = null;
         let score = 0;
         let time = 30;
+        let moleInterval = 1000;
 
         function startGame() {
             time = 30;
             score = 0;
+            moleInterval = 1000;
             scoreDisplay.textContent = score;
             timeDisplay.textContent = time;
 
@@ -82,6 +132,10 @@
                     }
                     alert(`游戏结束! 你的最终得分是: ${score}`);
                 }
+
+                if (time % 5 === 0) {
+                    moleInterval *= 0.9;
+                }
             }, 1000);
 
             showMole();
@@ -96,7 +150,7 @@
             moles[randomHoleIndex].classList.remove('hidden');
             currentHoleIndex = randomHoleIndex;
 
-            currentTimeout = setTimeout(showMole, 1000);
+            currentTimeout = setTimeout(showMole, moleInterval);
         }
 
         moles.forEach((mole, index) => {
@@ -107,6 +161,19 @@
                     moles[index].classList.add('hidden');
                     clearTimeout(currentTimeout);
                     showMole();
+
+                    // 添加视觉反馈
+                    const hole = document.getElementById(`hole-${index + 1}`);
+                    hole.classList.add('hit-feedback');
+                    const hitPopup = document.createElement('div');
+                    hitPopup.className = 'hit-popup';
+                    hitPopup.textContent = '💥';
+                    hole.appendChild(hitPopup);
+
+                    setTimeout(() => {
+                        hole.classList.remove('hit-feedback');
+                        hitPopup.remove();
+                    }, 1000);
                 }
             });
         });
@@ -114,4 +181,5 @@
         startGame();
     </script>
 </body>
+
 </html>
