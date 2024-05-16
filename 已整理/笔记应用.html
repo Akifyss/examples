@@ -106,7 +106,13 @@
             readOnly: false
         });
 
-        let notes = [];
+        let notes = [
+            {
+                id: Date.now(),
+                content: [{ insert: '这是一条笔记。\n' }],
+                name: `笔记 ${Date.now()}`
+            }
+        ];
         let selectedNoteIndex = null;
 
         function createNote() {
@@ -159,6 +165,9 @@
                     li.classList.add('bg-blue-100');
                 }
             });
+            if (notes.length > 0) {
+                selectNote(notes[0].id);
+            }
         }
 
         function renameNote(id, element) {

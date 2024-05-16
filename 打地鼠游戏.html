@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
+    <style>
+        :root {
+            --uiWidth: 700px;
+            --uiHeight: 500px;
+        }
+        .game-container {
+            width: var(--uiWidth);
+            height: var(--uiHeight);
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container bg-white mx-auto mt-8 p-4 rounded shadow-lg flex flex-col items-center">
+        <div id="score-board" class="w-full flex justify-between items-center mb-4 text-lg">
+            <span>时间: <span id="time" class="font-bold">30</span> 秒</span> 
+            <span>得分: <span id="score" class="font-bold">0</span></span>
+        </div>
+        <div class="grid grid-cols-3 gap-4 w-full h-full">
+            <div id="hole-1" class="bg-gray-200 rounded-lg flex justify-center items-center relative cursor-pointer">
+                <iconify-icon icon="emojione:mouse" class="text-3xl hidden" id="mole-1"></iconify-icon>
+            </div>
+            <div id="hole-2" class="bg-gray-200 rounded-lg flex justify-center items-center relative cursor-pointer">
+                <iconify-icon icon="emojione:mouse" class="text-3xl hidden" id="mole-2"></iconify-icon>
+            </div>
+            <div id="hole-3" class="bg-gray-200 rounded-lg flex justify-center items-center relative cursor-pointer">
+                <iconify-icon icon="emojione:mouse" class="text-3xl hidden" id="mole-3"></iconify-icon>
+            </div>
+            <div id="hole-4" class="bg-gray-200 rounded-lg flex justify-center items-center relative cursor-pointer">
+                <iconify-icon icon="emojione:mouse" class="text-3xl hidden" id="mole-4"></iconify-icon>
+            </div>
+            <div id="hole-5" class="bg-gray-200 rounded-lg flex justify-center items-center relative cursor-pointer">
+                <iconify-icon icon="emojione:mouse" class="text-3xl hidden" id="mole-5"></iconify-icon>
+            </div>
+            <div id="hole-6" class="bg-gray-200 rounded-lg flex justify-center items-center relative cursor-pointer">
+                <iconify-icon icon="emojione:mouse" class="text-3xl hidden" id="mole-6"></iconify-icon>
+            </div>
+            <div id="hole-7" class="bg-gray-200 rounded-lg flex justify-center items-center relative cursor-pointer">
+                <iconify-icon icon="emojione:mouse" class="text-3xl hidden" id="mole-7"></iconify-icon>
+            </div>
+            <div id="hole-8" class="bg-gray-200 rounded-lg flex justify-center items-center relative cursor-pointer">
+                <iconify-icon icon="emojione:mouse" class="text-3xl hidden" id="mole-8"></iconify-icon>
+            </div>
+            <div id="hole-9" class="bg-gray-200 rounded-lg flex justify-center items-center relative cursor-pointer">
+                <iconify-icon icon="emojione:mouse" class="text-3xl hidden" id="mole-9"></iconify-icon>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        const timeDisplay = document.getElementById('time');
+        const scoreDisplay = document.getElementById('score');
+        const holes = document.querySelectorAll('[id^="hole-"]');
+        const moles = document.querySelectorAll('[id^="mole-"]');
+
+        let currentTimeout;
+        let currentHoleIndex = null;
+        let score = 0;
+        let time = 30;
+
+        function startGame() {
+            time = 30;
+            score = 0;
+            scoreDisplay.textContent = score;
+            timeDisplay.textContent = time;
+
+            const gameInterval = setInterval(() => {
+                time--;
+                timeDisplay.textContent = time;
+
+                if (time <= 0) {
+                    clearInterval(gameInterval);
+                    clearTimeout(currentTimeout);
+                    if (currentHoleIndex !== null) {
+                        moles[currentHoleIndex].classList.add('hidden');
+                    }
+                    alert(`游戏结束! 你的最终得分是: ${score}`);
+                }
+            }, 1000);
+
+            showMole();
+        }
+
+        function showMole() {
+            if (currentHoleIndex !== null) {
+                moles[currentHoleIndex].classList.add('hidden');
+            }
+
+            const randomHoleIndex = Math.floor(Math.random() * holes.length);
+            moles[randomHoleIndex].classList.remove('hidden');
+            currentHoleIndex = randomHoleIndex;
+
+            currentTimeout = setTimeout(showMole, 1000);
+        }
+
+        moles.forEach((mole, index) => {
+            mole.addEventListener('click', () => {
+                if (!mole.classList.contains('hidden')) {
+                    score++;
+                    scoreDisplay.textContent = score;
+                    moles[index].classList.add('hidden');
+                    clearTimeout(currentTimeout);
+                    showMole();
+                }
+            });
+        });
+
+        startGame();
+    </script>
+</body>
+</html>

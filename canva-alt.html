@@ -8,162 +8,120 @@
 
         <!DOCTYPE html>
         <html lang="zh-CN">
-        
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>清新音乐播放器</title>
             <script src="https://cdn.tailwindcss.com"></script>
             <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
             <style>
                 :root {
-                    --uiWidth: 400px;
-                    --uiHeight: 400px;
+                    --uiWidth: 700px;
+                    --uiHeight: 500px;
                 }
-        
-                #player-container {
-                    position: relative;
-                    background-color: rgba(255, 255, 255, 0.65);
-                    backdrop-filter: blur(30px);
-                }
-        
-                #player-background {
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    background-size: cover;
-                    background-position: center;
-                    z-index: -1;
+                .game-container {
+                    width: var(--uiWidth);
+                    height: var(--uiHeight);
                 }
             </style>
         </head>
-        
-        <body class="flex items-center justify-center h-screen">
-            <div id="player-container" class="w-full h-full text-gray-800 rounded-3xl p-6 relative overflow-hidden"
-                style="max-width: var(--uiWidth); max-height: var(--uiHeight);">
-                <div id="player-header" class="flex flex-col items-center mb-6 relative z-10">
-                    <div id="album-cover" class="mb-4 rounded-xl overflow-hidden shadow-md">
-                        <img id="current-cover"
-                            src="https://images.unsplash.com/photo-1648198169467-278cdff02716?q=80&w=3502&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                            alt="Album Cover" class="w-40 h-40 object-cover">
+        <body>
+            <div class="game-container bg-white mx-auto mt-8 p-4 rounded shadow-lg flex flex-col items-center">
+                <div id="score-board" class="w-full flex justify-between items-center mb-4 text-lg">
+                    <span>时间: <span id="time" class="font-bold">30</span> 秒</span> 
+                    <span>得分: <span id="score" class="font-bold">0</span></span>
+                </div>
+                <div class="grid grid-cols-3 gap-4 w-full h-full">
+                    <div id="hole-1" class="bg-gray-200 rounded-lg flex justify-center items-center relative cursor-pointer">
+                        <iconify-icon icon="emojione:mouse" class="text-3xl hidden" id="mole-1"></iconify-icon>
                     </div>
-                    <div id="player-info" class="text-center">
-                        <p id="current-title" class="text-lg font-bold text-gray-900">Shadows of the Holler</p>
-                        <p id="current-time" class="text-sm text-gray-500">00:00 / 00:00</p>
+                    <div id="hole-2" class="bg-gray-200 rounded-lg flex justify-center items-center relative cursor-pointer">
+                        <iconify-icon icon="emojione:mouse" class="text-3xl hidden" id="mole-2"></iconify-icon>
+                    </div>
+                    <div id="hole-3" class="bg-gray-200 rounded-lg flex justify-center items-center relative cursor-pointer">
+                        <iconify-icon icon="emojione:mouse" class="text-3xl hidden" id="mole-3"></iconify-icon>
+                    </div>
+                    <div id="hole-4" class="bg-gray-200 rounded-lg flex justify-center items-center relative cursor-pointer">
+                        <iconify-icon icon="emojione:mouse" class="text-3xl hidden" id="mole-4"></iconify-icon>
+                    </div>
+                    <div id="hole-5" class="bg-gray-200 rounded-lg flex justify-center items-center relative cursor-pointer">
+                        <iconify-icon icon="emojione:mouse" class="text-3xl hidden" id="mole-5"></iconify-icon>
+                    </div>
+                    <div id="hole-6" class="bg-gray-200 rounded-lg flex justify-center items-center relative cursor-pointer">
+                        <iconify-icon icon="emojione:mouse" class="text-3xl hidden" id="mole-6"></iconify-icon>
+                    </div>
+                    <div id="hole-7" class="bg-gray-200 rounded-lg flex justify-center items-center relative cursor-pointer">
+                        <iconify-icon icon="emojione:mouse" class="text-3xl hidden" id="mole-7"></iconify-icon>
+                    </div>
+                    <div id="hole-8" class="bg-gray-200 rounded-lg flex justify-center items-center relative cursor-pointer">
+                        <iconify-icon icon="emojione:mouse" class="text-3xl hidden" id="mole-8"></iconify-icon>
+                    </div>
+                    <div id="hole-9" class="bg-gray-200 rounded-lg flex justify-center items-center relative cursor-pointer">
+                        <iconify-icon icon="emojione:mouse" class="text-3xl hidden" id="mole-9"></iconify-icon>
                     </div>
                 </div>
-                <div id="player-controls" class="flex items-center justify-center mb-4 space-x-6 text-gray-600 relative z-10">
-                    <button id="prev-btn" class="focus:outline-none">
-                        <iconify-icon icon="ic:baseline-skip-previous" width="32" height="32"
-                            class="hover:text-gray-900"></iconify-icon>
-                    </button>
-                    <button id="play-btn" class="focus:outline-none">
-                        <iconify-icon icon="ic:baseline-play-circle-outline" width="48" height="48"
-                            class="hover:text-gray-900"></iconify-icon>
-                    </button>
-                    <button id="next-btn" class="focus:outline-none">
-                        <iconify-icon icon="ic:baseline-skip-next" width="32" height="32"
-                            class="hover:text-gray-900"></iconify-icon>
-                    </button>
-                </div>
-                <div id="player-progress" class="relative w-full bg-gray-300 rounded-full h-2.5 mb-4 relative z-10">
-                    <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0;"></div>
-                </div>
-                <audio id="audio" src="https://cdn1.suno.ai/6a6bdd56-d583-4e0a-9869-b98a8c72a37b.mp3" preload="auto"></audio>
             </div>
-            <div id="player-background" class="w-full h-full text-gray-800 rounded-3xl p-6 relative overflow-hidden"
-                style="background-image: url('https://images.unsplash.com/photo-1648198169467-278cdff02716?q=80&w=3502&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); max-width: var(--uiWidth); max-height: var(--uiHeight);">
-            </div>
-            <script type="text/javascript">
-                const audio = document.getElementById('audio');
-                const playBtn = document.getElementById('play-btn');
-                const prevBtn = document.getElementById('prev-btn');
-                const nextBtn = document.getElementById('next-btn');
-                const progressBar = document.getElementById('progress-bar');
-                const currentTitle = document.getElementById('current-title');
-                const currentTime = document.getElementById('current-time');
-                const currentCover = document.getElementById('current-cover');
-                const playerBackground = document.getElementById('player-background');
         
-                let isPlaying = false;
-                let currentTrackIndex = 0;
-                const trackList = [
-                    {
-                        src: "https://cdn1.suno.ai/6a6bdd56-d583-4e0a-9869-b98a8c72a37b.mp3",
-                        title: "Shadows of the Holler",
-                        cover: "https://images.unsplash.com/photo-1648198169467-278cdff02716?q=80&w=3502&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                    },
-                    {
-                        src: "https://cdn1.suno.ai/a5e2198a-f352-4abb-9a24-7f81b143ded3.mp3",
-                        title: "Stone",
-                        cover: "https://images.unsplash.com/photo-1531180488878-b785d2ce8f71?q=80&w=3415&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                    },
-                    {
-                        src: "https://cdn1.suno.ai/19807561-1427-4c25-a229-a8c3063d0616.mp3",
-                        title: "Egyptian Dance Party",
-                        cover: "https://images.unsplash.com/photo-1539768942893-daf53e448371?q=80&w=3542&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                    }
-                ];
+            <script type="module">
+                const timeDisplay = document.getElementById('time');
+                const scoreDisplay = document.getElementById('score');
+                const holes = document.querySelectorAll('[id^="hole-"]');
+                const moles = document.querySelectorAll('[id^="mole-"]');
         
-                playBtn.addEventListener('click', () => {
-                    if (isPlaying) {
-                        audio.pause();
-                        playBtn.firstElementChild.setAttribute("icon", "ic:baseline-play-circle-outline");
-                    } else {
-                        audio.play();
-                        playBtn.firstElementChild.setAttribute("icon", "ic:baseline-pause-circle-outline");
-                    }
-                    isPlaying = !isPlaying;
-                });
+                let currentTimeout;
+                let currentHoleIndex = null;
+                let score = 0;
+                let time = 30;
         
-                prevBtn.addEventListener('click', () => {
-                    currentTrackIndex = (currentTrackIndex - 1 + trackList.length) % trackList.length;
-                    loadTrack(currentTrackIndex);
-                    audio.play();
-                    isPlaying = true;
-                    playBtn.firstElementChild.setAttribute("icon", "ic:baseline-pause-circle-outline");
-                });
+                function startGame() {
+                    time = 30;
+                    score = 0;
+                    scoreDisplay.textContent = score;
+                    timeDisplay.textContent = time;
         
-                nextBtn.addEventListener('click', () => {
-                    currentTrackIndex = (currentTrackIndex + 1) % trackList.length;
-                    loadTrack(currentTrackIndex);
-                    const playPromise = audio.play();
-                    if (playPromise !== undefined) {
-                        playPromise.then(() => { }).catch(error => {
-                            console.error(error);
-                        });
-                    }
-                    isPlaying = true;
-                    playBtn.firstElementChild.setAttribute("icon", "ic:baseline-pause-circle-outline");
-                });
+                    const gameInterval = setInterval(() => {
+                        time--;
+                        timeDisplay.textContent = time;
         
-                audio.addEventListener('timeupdate', () => {
-                    const current = audio.currentTime;
-                    const duration = audio.duration;
-                    progressBar.style.width = (current / duration) * 100 + '%';
-                    currentTime.textContent = `${formatTime(current)} / ${formatTime(duration)}`;
-                });
+                        if (time <= 0) {
+                            clearInterval(gameInterval);
+                            clearTimeout(currentTimeout);
+                            if (currentHoleIndex !== null) {
+                                moles[currentHoleIndex].classList.add('hidden');
+                            }
+                            alert(`游戏结束! 你的最终得分是: ${score}`);
+                        }
+                    }, 1000);
         
-                function loadTrack(index) {
-                    const track = trackList[index];
-                    audio.src = track.src;
-                    currentTitle.textContent = `${track.title}`;
-                    currentCover.src = track.cover;
-                    playerBackground.style.backgroundImage = `url('${track.cover}')`;
-                    audio.load();
+                    showMole();
                 }
         
-                function formatTime(time) {
-                    const minutes = Math.floor(time / 60);
-                    const seconds = Math.floor(time % 60).toString().padStart(2, '0');
-                    return `${minutes}:${seconds}`;
+                function showMole() {
+                    if (currentHoleIndex !== null) {
+                        moles[currentHoleIndex].classList.add('hidden');
+                    }
+        
+                    const randomHoleIndex = Math.floor(Math.random() * holes.length);
+                    moles[randomHoleIndex].classList.remove('hidden');
+                    currentHoleIndex = randomHoleIndex;
+        
+                    currentTimeout = setTimeout(showMole, 1000);
                 }
         
-                loadTrack(currentTrackIndex);
+                moles.forEach((mole, index) => {
+                    mole.addEventListener('click', () => {
+                        if (!mole.classList.contains('hidden')) {
+                            score++;
+                            scoreDisplay.textContent = score;
+                            moles[index].classList.add('hidden');
+                            clearTimeout(currentTimeout);
+                            showMole();
+                        }
+                    });
+                });
+        
+                startGame();
             </script>
         </body>
-        
         </html>
         
 

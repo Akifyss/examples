@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>舒尔特表</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --uiWidth: 500px;
+            --uiHeight: 500px;
+        }
+
+        body {
+            width: var(--uiWidth);
+            height: var(--uiHeight);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        #schulteTable {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            gap: 5px;
+            width: var(--uiWidth);
+            height: var(--uiHeight);
+        }
+
+        .cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            background-color: #f0f0f0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .cell:hover {
+            background-color: #d0d0d0;
+        }
+    </style>
+</head>
+<body>
+<div id="schulteTable"></div>
+
+<script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
+<script>
+    const tableSize = 5;
+    const schulteTable = document.getElementById('schulteTable');
+    let numbers = Array.from({length: tableSize * tableSize}, (_, i) => i + 1);
+
+    // Shuffle the numbers
+    numbers = numbers.map(n => [Math.random(), n])
+                      .sort((a, b) => a[0] - b[0])
+                      .map(pair => pair[1]);
+
+    numbers.forEach(number => {
+        const cell = document.createElement('div');
+        cell.id = `cell-${number}`;
+        cell.classList.add('cell');
+        cell.textContent = number;
+        schulteTable.appendChild(cell);
+    });
+</script>
+</body>
+</html>
