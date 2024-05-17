@@ -16,16 +16,15 @@
 </head>
 
 <body class="flex items-center justify-center h-screen">
-    <div id="timer-container" class="shadow-lg rounded-lg p-5 bg-white flex flex-col items-center justify-center"
-        style="width: var(--uiWidth); height: var(--uiHeight);">
-        <div id="display-container" class="flex flex-col items-center justify-center"
-            style="width: var(--uiWidth); height: var(--uiHeight); position: relative;">
+    <div id="timer-container" class="shadow-lg rounded-lg p-5 bg-white flex flex-col items-center justify-center" style="width: var(--uiWidth); height: var(--uiHeight);">
+        <div id="display-container" class="flex flex-col items-center justify-center" style="width: var(--uiWidth); height: var(--uiHeight); position: relative;">
             <iconify-icon icon="twemoji:tomato" style="font-size: 16rem; position: absolute;"></iconify-icon>
             <div id="time-display" class="text-5xl font-bold text-neutral-100" style="position: relative;">25:00</div>
+            <div id="status-message" class="text-sm text-neutral-100" style="position: relative;">工作计时</div>
             <div id="settings-container" class="hidden" style="position: relative;">
-                <label for="work-time" class="text-sm text-neutral-100	 block">工作时间(min):</label>
+                <label for="work-time" class="text-sm text-neutral-100 block">工作时间(min):</label>
                 <input id="work-time" type="number" value="25" class="border rounded py-1 px-2 text-black">
-                <label for="break-time" class="text-sm text-neutral-100	 block">休息时间(min):</label>
+                <label for="break-time" class="text-sm text-neutral-100 block">休息时间(min):</label>
                 <input id="break-time" type="number" value="5" class="border rounded py-1 px-2 text-black">
             </div>
         </div>
@@ -40,7 +39,6 @@
                 <iconify-icon icon="ic:round-settings"></iconify-icon>
             </button>
         </div>
-
     </div>
 
     <script>
@@ -49,8 +47,11 @@
         let isWorkTime = true;
         let timer = null;
         let isSettingsVisible = false;
+        let remainingTime = workTime * 60;
+        let isRunning = false;
 
         const timeDisplay = document.getElementById('time-display');
+        const statusMessage = document.getElementById('status-message');
         const toggleButton = document.getElementById('toggle-btn');
         const resetButton = document.getElementById('reset-btn');
         const settingsButton = document.getElementById('settings-btn');
@@ -59,16 +60,21 @@
         const breakTimeInput = document.getElementById('break-time');
 
         function updateTimeDisplay(minutes, seconds) {
-            timeDisplay.textContent = minutes.toLocaleString('en-US', { minimumIntegerDigits: 2 }) + ':' + seconds.toLocaleString('en-US', { minimumIntegerDigits: 2 });
+            timeDisplay.textContent = minutes.toLocaleString('en-US', {
+                minimumIntegerDigits: 2
+            }) + ':' + seconds.toLocaleString('en-US', {
+                minimumIntegerDigits: 2
+            });
         }
 
-        function startTimer(duration) {
-            let time = duration * 60;
+        function startTimer() {
             timer = setInterval(() => {
-                let minutes = Math.floor(time / 60);
-                let seconds = time % 60;
-                updateTimeDisplay(minutes, seconds);
-                if (time-- <= 0) {
+                if (remainingTime > 0) {
+                    remainingTime--;
+                    let minutes = Math.floor(remainingTime / 60);
+                    let seconds = remainingTime % 60;
+                    updateTimeDisplay(minutes, seconds);
+                } else {
                     clearInterval(timer);
                     toggleTimer();
                 }
@@ -77,29 +83,35 @@
 
         function toggleTimer() {
             if (isWorkTime) {
-                startTimer(breakTime);
+                remainingTime = breakTime * 60;
+                statusMessage.textContent = '休息计时';
                 isWorkTime = false;
             } else {
-                startTimer(workTime);
+                remainingTime = workTime * 60;
+                statusMessage.textContent = '工作计时';
                 isWorkTime = true;
             }
+            startTimer();
         }
 
         toggleButton.onclick = () => {
-            if (!timer) {
-                startTimer(workTime);
+            if (!isRunning) {
+                startTimer();
                 toggleButton.children[0].setAttribute('icon', 'mdi:pause');
+                isRunning = true;
             } else {
                 clearInterval(timer);
-                timer = null;
                 toggleButton.children[0].setAttribute('icon', 'mdi:play');
+                isRunning = false;
             }
         };
 
         resetButton.onclick = () => {
             clearInterval(timer);
-            timer = null;
+            isRunning = false;
+            remainingTime = workTime * 60;
             updateTimeDisplay(workTime, 0);
+            statusMessage.textContent = '工作计时';
             isWorkTime = true;
             toggleButton.children[0].setAttribute('icon', 'mdi:play');
         };
@@ -108,6 +120,7 @@
             isSettingsVisible = !isSettingsVisible;
             settingsContainer.classList.toggle('hidden');
             timeDisplay.classList.toggle('hidden');
+            statusMessage.classList.toggle('hidden');
             settingsButton.children[0].setAttribute('icon', isSettingsVisible ? 'ic:baseline-close' : 'ic:round-settings');
         };
 
