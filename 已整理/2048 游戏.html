@@ -147,6 +147,7 @@
 
         let currentScore = 0;
         let bestScore = 0;
+        let gameStarted = false;
 
         function startNewGame() {
             const gridElement = document.getElementById('grid');
@@ -245,9 +246,12 @@
 
         document.getElementById('startGame').addEventListener('click', () => {
             document.getElementById('modal').style.display = 'none';
+            gameStarted = true;
         });
 
         document.addEventListener('keydown', (e) => {
+            if (!gameStarted) return;
+
             let moved = false;
             switch (e.key) {
                 case "ArrowUp": moved = handleMove(currentGrid, "Up"); break;
@@ -262,6 +266,7 @@
 
         document.getElementById('restart').addEventListener('click', () => {
             currentGrid = startNewGame();
+            gameStarted = true;
         });
 
         // Set initial best score
