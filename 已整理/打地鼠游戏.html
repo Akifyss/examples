@@ -212,7 +212,6 @@
         });
 
         function handleHit(index) {
-
             if (gameActive && index === currentHoleIndex) {
                 score++;
                 scoreDisplay.textContent = score;
@@ -235,6 +234,17 @@
                 }, 400);
             }
         }
+
+        document.addEventListener('click', (e) => {
+            const mx = e.clientX,
+                my = e.clientY;
+            moles.forEach((mole, index) => {
+                const rect = mole.getBoundingClientRect();
+                if (mx > rect.left - 64 && mx < rect.right + 64 && my > rect.top - 64 && my < rect.bottom + 64) {
+                    handleHit(index);
+                }
+            });
+        });
 
         restartButton.addEventListener('click', restartGame);
 
