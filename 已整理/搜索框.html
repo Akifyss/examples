@@ -44,19 +44,29 @@
 <body>
     <div id="search-container">
         <input type="text" id="search-input" placeholder="请输入搜索内容...">
+        <iconify-icon id="clean-icon" icon="ic:baseline-clear" width="24" height="24" style="display:none; cursor:pointer; margin-right: 10px;"></iconify-icon>
         <iconify-icon id="search-icon" icon="ic:baseline-search" width="24" height="24"></iconify-icon>
     </div>
 
     <script>
         const searchInput = document.getElementById('search-input');
         const searchIcon = document.getElementById('search-icon');
+        const cleanIcon = document.getElementById('clean-icon');
 
         searchInput.addEventListener('input', function () {
             if (searchInput.value.trim() !== '') {
                 searchIcon.style.color = '#3786f4';
+                cleanIcon.style.display = 'inline';
             } else {
                 searchIcon.style.color = 'grey';
+                cleanIcon.style.display = 'none';
             }
+        });
+
+        cleanIcon.addEventListener('click', function () {
+            searchInput.value = '';
+            searchIcon.style.color = 'grey';
+            cleanIcon.style.display = 'none';
         });
     </script>
 </body>
