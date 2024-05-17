@@ -104,15 +104,15 @@
             gameContainer.innerHTML = '';
             snake.forEach(segment => {
                 const snakeElement = document.createElement('div');
-                snakeElement.style.gridRowStart = segment.y;
-                snakeElement.style.gridColumnStart = segment.x;
+                snakeElement.style.gridRowStart = segment.y + 1;
+                snakeElement.style.gridColumnStart = segment.x + 1;
                 snakeElement.classList.add('snake-cell');
                 gameContainer.appendChild(snakeElement);
             });
 
             const foodElement = document.createElement('div');
-            foodElement.style.gridRowStart = food.y;
-            foodElement.style.gridColumnStart = food.x;
+            foodElement.style.gridRowStart = food.y + 1;
+            foodElement.style.gridColumnStart = food.x + 1;
             foodElement.classList.add('food-cell');
             gameContainer.appendChild(foodElement);
         }
