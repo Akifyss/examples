@@ -20,6 +20,7 @@
             width: 800px;
             height: 600px;
             background-color: #111;
+            position: relative;
         }
 
         .snake-cell {
@@ -41,14 +42,26 @@
             border-radius: 10px;
             display: none;
         }
+
+        #start-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
     </style>
 </head>
 
 <body>
-    <div id="game-container" style="width:100% !important; height:100% !important; margin:0!important; max-width:none!important; min-width:none!important; max-height:none!important; min-height:none!important; position:static!important;"></div>
+    <div id="game-container" style="width:100% !important; height:100% !important; margin:0!important; max-width:none!important; min-width:none!important; max-height:none!important; min-height:none!important; position:static!important;">
+        <button id="start-button" class="bg-green-500 text-white px-4 py-2 rounded">开始游戏</button>
+        <div id="instruction-text" class="text-white absolute bottom-10 left-1/2 transform -translate-x-1/2">使用方向键来控制贪吃蛇</div>
+    </div>
     <div id="toast">游戏结束！</div>
     <script>
         const gameContainer = document.getElementById('game-container');
+        const startButton = document.getElementById('start-button');
+        const instructionText = document.getElementById('instruction-text');
         const gameWidth = 800;
         const gameHeight = 600;
         const cellSize = 20;
@@ -151,12 +164,16 @@
             }
         });
 
-        gameContainer.style.display = 'grid';
-        gameContainer.style.gridTemplateRows = `repeat(${gameRows}, 1fr)`;
-        gameContainer.style.gridTemplateColumns = `repeat(${gameCols}, 1fr)`;
+        startButton.onclick = () => {
+            startButton.style.display = 'none';
+            instructionText.style.display = 'none';
+            gameContainer.style.display = 'grid';
+            gameContainer.style.gridTemplateRows = `repeat(${gameRows}, 1fr)`;
+            gameContainer.style.gridTemplateColumns = `repeat(${gameCols}, 1fr)`;
 
-        placeFood();
-        window.requestAnimationFrame(main);
+            placeFood();
+            window.requestAnimationFrame(main);
+        };
     </script>
 </body>
 
