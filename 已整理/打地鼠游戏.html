@@ -136,11 +136,13 @@
         let time = 30;
         let moleInterval = 1000;
         let gameInterval;
+        let gameActive = true;
 
         function startGame() {
             time = 30;
             score = 0;
             moleInterval = 1000;
+            gameActive = true;
             scoreDisplay.textContent = 0;
             timeDisplay.textContent = 30;
             applyHighScore();
@@ -151,6 +153,7 @@
 
                 if (time <= 0) {
                     clearInterval(gameInterval);
+                    gameActive = false;
                     clearTimeout(currentTimeout);
                     if (currentHoleIndex !== null) {
                         moles[currentHoleIndex].classList.add('hidden');
@@ -161,7 +164,7 @@
                     }
                 }
 
-                if (time % 5 === 0) {
+                if (time % 5 === 0 && gameActive) {
                     moleInterval *= 0.9;
                 }
             }, 1000);
@@ -183,6 +186,8 @@
         }
 
         function showMole() {
+            if (!gameActive) return;
+
             if (currentHoleIndex !== null) {
                 moles[currentHoleIndex].classList.add('hidden');
             }
@@ -207,7 +212,8 @@
         });
 
         function handleHit(index) {
-            if (index === currentHoleIndex) {
+
+            if (gameActive && index === currentHoleIndex) {
                 score++;
                 scoreDisplay.textContent = score;
                 moles[index].classList.add('hidden');
