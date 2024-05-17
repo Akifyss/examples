@@ -80,7 +80,7 @@
             <div id="score-container" class="score-container flex flex-col items-center justify-center">
                 <span>得分: <span id="score" class="font-bold">0</span></span>
                 <span>最高分: <span id="high-score" class="font-bold">0</span></span>
-        </div>
+            </div>
         </div>
         <div class="grid grid-cols-3 gap-4 w-full h-full justify-center items-center place-items-center">
             <div id="hole-1" class="hole flex justify-center items-center relative">
@@ -135,6 +135,7 @@
         let highScore = 0;
         let time = 30;
         let moleInterval = 1000;
+        let gameInterval;
 
         function startGame() {
             time = 30;
@@ -144,7 +145,7 @@
             timeDisplay.textContent = 30;
             applyHighScore();
 
-            const gameInterval = setInterval(() => {
+            gameInterval = setInterval(() => {
                 time--;
                 timeDisplay.textContent = time;
 
@@ -169,7 +170,11 @@
         }
 
         function restartGame() {
+            clearInterval(gameInterval);
             clearTimeout(currentTimeout);
+            if (currentHoleIndex !== null) {
+                moles[currentHoleIndex].classList.add('hidden');
+            }
             startGame();
         }
 
