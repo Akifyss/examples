@@ -97,6 +97,7 @@
         const calendarDays = document.getElementById('calendarDays');
         const memoInput = document.getElementById('memoInput');
         const submitMemo = document.getElementById('submitMemo');
+        let currentSelectedDate = null;
         const weekDays = ['日', '一', '二', '三', '四', '五', '六'];
         let memos = {};
         let currentDate = new Date();
@@ -122,7 +123,8 @@
                 if (memos[dateKey]) {
                     memoDate.classList.add('active');
                 }
-                if (i === currentDate.getDate() && month === currentDate.getMonth()) {
+                if ((i === currentDate.getDate() && month === currentDate.getMonth() && !currentSelectedDate) ||
+                    (currentSelectedDate && dateKey === currentSelectedDate)) {
                     memoDate.classList.add('selected');
                     selectDate(date, memoDate, false);
                 }
@@ -136,6 +138,7 @@
             element.classList.add('selected');
             const dateKey = date.toISOString().split('T')[0];
             memoInput.value = memos[dateKey] || '';
+            currentSelectedDate = dateKey;
             if (focus) {
                 memoInput.focus();
             }
