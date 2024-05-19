@@ -78,6 +78,30 @@
       padding: 0;
       cursor: pointer;
     }
+
+    #saveBtn {
+      background-color: #10b981;
+      color: white;
+      border-radius: 8px;
+      padding: 0 15px;
+      margin: 0 10px;
+    }
+
+    #undoBtn {
+      background-color: #3b82f6;
+      color: white;
+      border-radius: 8px;
+      padding: 0 15px;
+      margin: 0 10px;
+    }
+
+    #redoBtn {
+      background-color: #f59e0b;
+      color: white;
+      border-radius: 8px;
+      padding: 0 15px;
+      margin: 0 10px;
+    }
   </style>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
@@ -93,6 +117,9 @@
         <option value="10">粗笔</option>
       </select>
       <input type="color" id="colorPicker" class="tool-item">
+      <button id="undoBtn" class="tool-item">撤销</button>
+      <button id="redoBtn" class="tool-item">重做</button>
+      <button id="saveBtn" class="tool-item">保存</button>
     </div>
     <canvas id="drawingCanvas"></canvas>
   </div>
@@ -106,8 +133,18 @@
     let painting = false;
     let brushSize = 5;
     let color = '#000000';
+    const undoStack = [];
+    const redoStack = [];
+
+    function saveState() {
+      undoStack.push(canvas.toDataURL());
+      if (undoStack.length > 10) {
+        undoStack.shift();
+      }
+    }
 
     function startPosition(e) {
+      saveState();
       painting = true;
       draw(e);
     }
@@ -129,12 +166,44 @@
       ctx.moveTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
     }
 
+    function undo() {
+      if (undoStack.length > 0) {
+        redoStack.push(canvas.toDataURL());
+        restoreState(undoStack.pop());
+      }
+    }
+
+    function redo() {
+      if (redoStack.length > 0) {
+        undoStack.push(canvas.toDataURL());
+        restoreState(redoStack.pop());
+      }
+    }
+
+    function restoreState(state) {
+      const img = new Image();
+      img.onload = function() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0);
+      };
+      img.src = state;
+    }
+
+    function saveCanvas() {
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL('image/png');
+      link.download = 'canvas.png';
+      link.click();
+    }
+
     canvas.addEventListener('mousedown', startPosition);
     canvas.addEventListener('mouseup', finishedPosition);
     canvas.addEventListener('mousemove', draw);
 
     document.getElementById('clearBtn').addEventListener('click', () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      saveState();
+      redoStack.length = 0;
     });
 
     document.getElementById('brushSize').addEventListener('change', function () {
@@ -144,6 +213,12 @@
     document.getElementById('colorPicker').addEventListener('input', function () {
       color = this.value;
     });
+
+    document.getElementById('undoBtn').addEventListener('click', undo);
+
+    document.getElementById('redoBtn').addEventListener('click', redo);
+
+    document.getElementById('saveBtn').addEventListener('click', saveCanvas);
   </script>
 </body>
 
