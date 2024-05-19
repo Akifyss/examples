@@ -83,7 +83,7 @@
             for (let i = 1; i <= daysInMonth; i++) {
                 const dayCell = document.createElement('div');
                 dayCell.textContent = i;
-                dayCell.classList.add('w-10', 'h-10', 'flex', 'items-center', 'justify-center', 'border', 'rounded-lg', 'hover:bg-gray-200');
+                dayCell.classList.add('text-center', 'p-2', 'border', 'rounded-lg', 'hover:bg-gray-200');
 
                 if (i === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear()) {
                     dayCell.classList.add('bg-blue-200');
