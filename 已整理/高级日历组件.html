@@ -30,6 +30,7 @@
             transition: transform 0.2s;
             display: flex;
             justify-content: center;
+            align-items: center;
         }
 
         .memo-date.active {
@@ -62,6 +63,12 @@
         .submit-btn:hover {
             background-color: #3730a3;
         }
+
+        .week-day {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     </style>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap" rel="stylesheet">
 </head>
@@ -77,13 +84,13 @@
                 onclick="changeMonth(1)"></iconify-icon>
         </div>
         <div id="weekDays" class="grid grid-cols-7 gap-2">
-            <div>周日</div>
-            <div>周一</div>
-            <div>周二</div>
-            <div>周三</div>
-            <div>周四</div>
-            <div>周五</div>
-            <div>周六</div>
+            <div class="week-day">周日</div>
+            <div class="week-day">周一</div>
+            <div class="week-day">周二</div>
+            <div class="week-day">周三</div>
+            <div class="week-day">周四</div>
+            <div class="week-day">周五</div>
+            <div class="week-day">周六</div>
         </div>
         <div id="calendarDays" class="grid grid-cols-7 gap-2 my-5"></div>
         <textarea id="memoInput" class="memo-input p-2 border rounded-lg resize-none" rows="5"
@@ -123,8 +130,7 @@
                 if (memos[dateKey]) {
                     memoDate.classList.add('active');
                 }
-                if ((i === currentDate.getDate() && month === currentDate.getMonth() && !currentSelectedDate) ||
-                    (currentSelectedDate && dateKey === currentSelectedDate)) {
+                if ((i === currentDate.getDate() && month === currentDate.getMonth() && !currentSelectedDate) || (currentSelectedDate && dateKey === currentSelectedDate)) {
                     memoDate.classList.add('selected');
                     selectDate(date, memoDate, false);
                 }
