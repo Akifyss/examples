@@ -32,13 +32,15 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      background: #efefef;
     }
 
     #drawingCanvas {
       width: 100%;
       height: calc(100% - 50px);
       background: white;
-      border: 1px solid #ccc;
+      border: 12px solid #efefef;
+      border-radius: 24px;
       cursor: crosshair;
     }
 
@@ -49,8 +51,8 @@
       justify-content: center;
       align-items: center;
       background: #efefef;
-      border-bottom: 1px solid #cecece;
-      padding: 8px;
+      padding: 12px;
+      padding-bottom: 0;
     }
 
     .tool-item {
@@ -115,18 +117,18 @@
 <body>
   <div id="canvas-container">
     <div id="toolbar">
-      <button id="clearBtn" class="tool-item">清空</button>
-      <select id="brushSize" class="tool-item">
-        <option value="2">细笔</option>
-        <option value="5" selected>中笔</option>
-        <option value="10">粗笔</option>
-      </select>
       <select id="shapeSelector" class="tool-item">
         <option value="none">选择形状</option>
         <option value="rectangle">矩形</option>
         <option value="circle">圆形</option>
       </select>
+      <select id="brushSize" class="tool-item">
+        <option value="2">细笔</option>
+        <option value="5" selected>中笔</option>
+        <option value="10">粗笔</option>
+      </select>
       <input type="color" id="colorPicker" class="tool-item">
+      <button id="clearBtn" class="tool-item">清空</button>
       <button id="undoBtn" class="tool-item">撤销</button>
       <button id="redoBtn" class="tool-item">重做</button>
       <button id="saveBtn" class="tool-item">保存</button>
