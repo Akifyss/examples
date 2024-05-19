@@ -36,11 +36,11 @@
 <body>
     <div id="calendarContainer">
         <div id="header" class="flex items-center justify-between px-4 py-2 bg-gray-100 border-b">
-            <button id="previousMonthBtn" class="hover:bg-gray-200 p-2 rounded-full">
+            <button id="previousMonthBtn" class="hover:bg-gray-200 w-8 h-8 flex items-center justify-center rounded-full">
                 <iconify-icon icon="bi:arrow-left" width="20" height="20"></iconify-icon>
             </button>
             <h2 id="currentMonthYear" class="font-bold text-lg"></h2>
-            <button id="nextMonthBtn" class="hover:bg-gray-200 p-2 rounded-full">
+            <button id="nextMonthBtn" class="hover:bg-gray-200 w-8 h-8 flex items-center justify-center rounded-full">
                 <iconify-icon icon="bi:arrow-right" width="20" height="20"></iconify-icon>
             </button>
         </div>
@@ -83,7 +83,7 @@
             for (let i = 1; i <= daysInMonth; i++) {
                 const dayCell = document.createElement('div');
                 dayCell.textContent = i;
-                dayCell.classList.add('text-center', 'p-2', 'border', 'rounded-lg', 'hover:bg-gray-200');
+                dayCell.classList.add('w-10', 'h-10', 'flex', 'items-center', 'justify-center', 'border', 'rounded-lg', 'hover:bg-gray-200');
 
                 if (i === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear()) {
                     dayCell.classList.add('bg-blue-200');
