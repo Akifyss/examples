@@ -102,6 +102,11 @@
       padding: 0 15px;
       margin: 0 10px;
     }
+
+    #shapeSelector {
+      border-radius: 8px;
+      padding: 0 10px;
+    }
   </style>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
@@ -115,6 +120,11 @@
         <option value="2">细笔</option>
         <option value="5" selected>中笔</option>
         <option value="10">粗笔</option>
+      </select>
+      <select id="shapeSelector" class="tool-item">
+        <option value="none">选择形状</option>
+        <option value="rectangle">矩形</option>
+        <option value="circle">圆形</option>
       </select>
       <input type="color" id="colorPicker" class="tool-item">
       <button id="undoBtn" class="tool-item">撤销</button>
@@ -131,10 +141,13 @@
     canvas.height = canvas.offsetHeight;
 
     let painting = false;
+    let drawingShape = false;
     let brushSize = 5;
     let color = '#000000';
+    let shape = 'none';
     const undoStack = [];
     const redoStack = [];
+    let startX, startY;
 
     function saveState() {
       undoStack.push(canvas.toDataURL());
@@ -145,12 +158,19 @@
 
     function startPosition(e) {
       saveState();
-      painting = true;
-      draw(e);
+      if (shape === 'none') {
+        painting = true;
+        draw(e);
+      } else {
+        drawingShape = true;
+        startX = e.clientX - canvas.offsetLeft;
+        startY = e.clientY - canvas.offsetTop;
+      }
     }
 
     function finishedPosition() {
       painting = false;
+      drawingShape = false;
       ctx.beginPath();
     }
 
@@ -164,6 +184,28 @@
       ctx.stroke();
       ctx.beginPath();
       ctx.moveTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+    }
+
+    function drawShape(e) {
+      if (!drawingShape) return;
+      const x = e.clientX - canvas.offsetLeft;
+      const y = e.clientY - canvas.offsetTop;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const img = new Image();
+      img.src = undoStack[undoStack.length - 1];
+      img.onload = function () {
+        ctx.drawImage(img, 0, 0);
+        ctx.beginPath();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = brushSize;
+        if (shape === 'rectangle') {
+          ctx.rect(startX, startY, x - startX, y - startY);
+        } else if (shape === 'circle') {
+          const radius = Math.sqrt(Math.pow(x - startX, 2) + Math.pow(y - startY, 2));
+          ctx.arc(startX, startY, radius, 0, 2 * Math.PI);
+        }
+        ctx.stroke();
+      };
     }
 
     function undo() {
@@ -182,7 +224,7 @@
 
     function restoreState(state) {
       const img = new Image();
-      img.onload = function() {
+      img.onload = function () {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(img, 0, 0);
       };
@@ -199,6 +241,7 @@
     canvas.addEventListener('mousedown', startPosition);
     canvas.addEventListener('mouseup', finishedPosition);
     canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mousemove', drawShape);
 
     document.getElementById('clearBtn').addEventListener('click', () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -214,10 +257,12 @@
       color = this.value;
     });
 
+    document.getElementById('shapeSelector').addEventListener('change', function () {
+      shape = this.value;
+    });
+
     document.getElementById('undoBtn').addEventListener('click', undo);
-
     document.getElementById('redoBtn').addEventListener('click', redo);
-
     document.getElementById('saveBtn').addEventListener('click', saveCanvas);
   </script>
 </body>
