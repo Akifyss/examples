@@ -224,13 +224,6 @@
       img.src = state;
     }
 
-    function saveCanvas() {
-      const link = document.createElement('a');
-      link.href = canvas.toDataURL('image/png');
-      link.download = 'canvas.png';
-      link.click();
-    }
-
     canvas.addEventListener('mousedown', startPosition);
     canvas.addEventListener('mouseup', finishedPosition);
     canvas.addEventListener('mousemove', draw);
