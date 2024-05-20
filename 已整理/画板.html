@@ -81,14 +81,6 @@
       cursor: pointer;
     }
 
-    #saveBtn {
-      background-color: #10b981;
-      color: white;
-      border-radius: 8px;
-      padding: 0 15px;
-      margin: 0 10px;
-    }
-
     #undoBtn {
       background-color: #3b82f6;
       color: white;
@@ -131,7 +123,6 @@
       <button id="clearBtn" class="tool-item">清空</button>
       <button id="undoBtn" class="tool-item">撤销</button>
       <button id="redoBtn" class="tool-item">重做</button>
-      <button id="saveBtn" class="tool-item">保存</button>
     </div>
     <canvas id="drawingCanvas"></canvas>
   </div>
@@ -265,7 +256,6 @@
 
     document.getElementById('undoBtn').addEventListener('click', undo);
     document.getElementById('redoBtn').addEventListener('click', redo);
-    document.getElementById('saveBtn').addEventListener('click', saveCanvas);
   </script>
 </body>
 
