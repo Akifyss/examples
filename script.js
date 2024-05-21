@@ -6,11 +6,11 @@ const folderPath = path.join(__dirname, '已整理');
 const filesObj = {}
 
 async function readImgUrl() {
-  const filePath = path.join(__dirname, 'imgUrl/index.json');
+  const filePath = path.join(__dirname, 'assets/imgUrl.json');
   try {
     const data = await fs.readFile(filePath, 'utf8');
     const json = JSON.parse(data);
-    return json;
+    return json.imgUrl;
   } catch (err) {
     console.log(err);
   }
