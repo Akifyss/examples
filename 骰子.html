@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>立方体骰子</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
+    <style>
+        :root {
+            --uiWidth: 200px;
+            --uiHeight: 200px;
+        }
+        body, html {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+        #diceContainer {
+            height: var(--uiHeight);
+            width: var(--uiWidth);
+            perspective: 1000px;
+        }
+
+        #dice {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            transform-style: preserve-3d;
+            transform: rotateX(0deg) rotateY(0deg);
+            transition: transform 2s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            cursor: pointer; /* 新增 */
+        }
+
+        .face {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: #4B5563;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dot {
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .face:nth-child(1) { transform: rotateY(0deg) translateZ(50px); }
+        .face:nth-child(2) { transform: rotateY(180deg) translateZ(50px); }
+        .face:nth-child(3) { transform: rotateY(90deg) translateZ(50px); }
+        .face:nth-child(4) { transform: rotateY(-90deg) translateZ(50px); }
+        .face:nth-child(5) { transform: rotateX(90deg) translateZ(50px); }
+        .face:nth-child(6) { transform: rotateX(-90deg) translateZ(50px); }
+
+        #buttonContainer {
+            margin-top: 20px;
+        }
+
+        #rollButton {
+            @apply bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 transition;
+        }
+    </style>
+</head>
+<body>
+    <div id="mainContent" class="flex flex-col items-center">
+        <div id="diceContainer">
+            <div id="dice">
+                <div class="face" id="face1">
+                    <div class="dot"></div>
+                </div>
+                <div class="face" id="face2">
+                    <div class="grid grid-cols-1 gap-2">
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                    </div>
+                </div>
+                <div class="face" id="face3">
+                    <div class="grid grid-rows-3 gap-2">
+                        <div class="dot self-start"></div>
+                        <div class="dot self-center"></div>
+                        <div class="dot self-end"></div>
+                    </div>
+                </div>
+                <div class="face" id="face4">
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                    </div>
+                </div>
+                <div class="face" id="face5">
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="dot col-start-1 row-start-1"></div>
+                        <div class="dot col-start-3 row-start-1"></div>
+                        <div class="dot col-start-2 row-start-2"></div>
+                        <div class="dot col-start-1 row-start-3"></div>
+                        <div class="dot col-start-3 row-start-3"></div>
+                    </div>
+                </div>
+                <div class="face" id="face6">
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const getRandomFace = () => Math.floor(Math.random() * 6) + 1;
+        const dice = document.getElementById('dice');
+
+        dice.addEventListener('click', () => {
+            const face = getRandomFace();
+            let rotationX = (Math.floor(Math.random() * 4) + 1) * 360;
+            let rotationY = (Math.floor(Math.random() * 4) + 1) * 360;
+
+            switch (face) {
+                case 1:
+                    break;
+                case 2:
+                    rotationY += 180;
+                    break;
+                case 3:
+                    rotationY += 90;
+                    break;
+                case 4:
+                    rotationY -= 90;
+                    break;
+                case 5:
+                    rotationX += 90;
+                    break;
+                case 6:
+                    rotationX -= 90;
+                    break;
+            }
+
+            dice.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+        });
+    </script>
+</body>
+</html>
