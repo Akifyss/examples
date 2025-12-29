@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <title>带备忘录的日历组件</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .calendar {
+            width: 100% !important;
+            height: 100% !important;
+            margin: 0 !important;
+            max-width: none !important;
+            min-width: none !important;
+            max-height: none !important;
+            min-height: none !important;
+            position: static !important;
+        }
+
+        .memo-date {
+            background-color: #f3f4f6;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            margin: 0.25rem;
+            transition: transform 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .memo-date.active {
+            background-color: #fef3c7;
+            color: #78350f;
+        }
+
+        .memo-date.selected {
+            transform: scale(1.05);
+            outline: 2px solid #4f46e5;
+        }
+
+        .memo-input {
+            width: 100%;
+            display: block;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+            background-color: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background-color: #3730a3;
+        }
+
+        .week-day {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div id="calendarApp" class="calendar p-5 bg-white rounded-lg shadow-lg">
+        <div id="calendarHeader" class="flex justify-between items-center mb-5">
+            <iconify-icon icon="akar-icons:chevron-left" class="cursor-pointer"
+                onclick="changeMonth(-1)"></iconify-icon>
+            <h2 id="calendarTitle" class="text-xl font-bold"></h2>
+            <iconify-icon icon="akar-icons:chevron-right" class="cursor-pointer"
+                onclick="changeMonth(1)"></iconify-icon>
+        </div>
+        <div id="weekDays" class="grid grid-cols-7 gap-2">
+            <div class="week-day">周日</div>
+            <div class="week-day">周一</div>
+            <div class="week-day">周二</div>
+            <div class="week-day">周三</div>
+            <div class="week-day">周四</div>
+            <div class="week-day">周五</div>
+            <div class="week-day">周六</div>
+        </div>
+        <div id="calendarDays" class="grid grid-cols-7 gap-2 my-5"></div>
+        <textarea id="memoInput" class="memo-input p-2 border rounded-lg resize-none" rows="5"
+            placeholder="请输入备忘录内容..."></textarea>
+        <button id="submitMemo" class="submit-btn">提交</button>
+    </div>
+
+    <script>
+        const calendarApp = document.getElementById('calendarApp');
+        const calendarTitle = document.getElementById('calendarTitle');
+        const calendarDays = document.getElementById('calendarDays');
+        const memoInput = document.getElementById('memoInput');
+        const submitMemo = document.getElementById('submitMemo');
+        let currentSelectedDate = null;
+        const weekDays = ['日', '一', '二', '三', '四', '五', '六'];
+        let memos = {};
+        let currentDate = new Date();
+
+        function renderCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            calendarTitle.innerText = `${year}年${month + 1}月`;
+            calendarDays.innerHTML = '';
+
+            for (let i = 0; i < firstDay.getDay(); i++) {
+                calendarDays.innerHTML += '<div></div>';
+            }
+
+            for (let i = 1; i <= lastDay.getDate(); i++) {
+                const date = new Date(year, month, i);
+                const dateKey = date.toISOString().split('T')[0];
+                const memoDate = document.createElement('div');
+                memoDate.className = 'memo-date cursor-pointer';
+                memoDate.innerText = i;
+                if (memos[dateKey]) {
+                    memoDate.classList.add('active');
+                }
+                if ((i === currentDate.getDate() && month === currentDate.getMonth() && !currentSelectedDate) || (currentSelectedDate && dateKey === currentSelectedDate)) {
+                    memoDate.classList.add('selected');
+                    selectDate(date, memoDate, false);
+                }
+                memoDate.onclick = () => selectDate(date, memoDate, true);
+                calendarDays.appendChild(memoDate);
+            }
+        }
+
+        function selectDate(date, element, focus) {
+            document.querySelectorAll('.memo-date').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+            const dateKey = date.toISOString().split('T')[0];
+            memoInput.value = memos[dateKey] || '';
+            currentSelectedDate = dateKey;
+            if (focus) {
+                memoInput.focus();
+            }
+            submitMemo.onclick = () => {
+                memos[dateKey] = memoInput.value;
+                renderCalendar();
+            };
+        }
+
+        function changeMonth(change) {
+            currentDate.setMonth(currentDate.getMonth() + change);
+            renderCalendar();
+        }
+
+        renderCalendar();
+    </script>
+
+</body>
+
+</html>

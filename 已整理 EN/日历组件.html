@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar UI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
+    <style>
+        :root {
+            --defaultWidth: 400;
+            --defaultHeight: 450;
+            --uiWidth: var(--defaultWidth);
+            --uiHeight: var(--defaultHeight);
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+
+        #calendarContainer {
+            width: var(--uiWidth);
+            height: var(--uiHeight);
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="calendarContainer">
+        <div id="header" class="flex items-center justify-between px-4 py-2 bg-gray-100 border-b">
+            <button id="previousMonthBtn" class="hover:bg-gray-200 w-8 h-8 flex items-center justify-center rounded-full">
+                <iconify-icon icon="bi:arrow-left" width="20" height="20"></iconify-icon>
+            </button>
+            <h2 id="currentMonthYear" class="font-bold text-lg"></h2>
+            <button id="nextMonthBtn" class="hover:bg-gray-200 w-8 h-8 flex items-center justify-center rounded-full">
+                <iconify-icon icon="bi:arrow-right" width="20" height="20"></iconify-icon>
+            </button>
+        </div>
+        <div id="weekdays" class="grid grid-cols-7 gap-2 p-2 text-center text-gray-500">
+            <div id="sunday">日</div>
+            <div id="monday">一</div>
+            <div id="tuesday">二</div>
+            <div id="wednesday">三</div>
+            <div id="thursday">四</div>
+            <div id="friday">五</div>
+            <div id="saturday">六</div>
+        </div>
+        <div id="calendarGrid" class="grid grid-cols-7 gap-2 p-2"></div>
+    </div>
+    <script>
+        const calendarGrid = document.getElementById('calendarGrid');
+        const currentMonthYear = document.getElementById('currentMonthYear');
+        const previousMonthBtn = document.getElementById('previousMonthBtn');
+        const nextMonthBtn = document.getElementById('nextMonthBtn');
+
+        let today = new Date();
+        let currentMonth = today.getMonth();
+        let currentYear = today.getFullYear();
+
+        function renderCalendar() {
+            const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
+            const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
+            const daysInMonth = lastDayOfMonth.getDate();
+            const dayOfWeekOfFirstDay = firstDayOfMonth.getDay();
+
+            calendarGrid.innerHTML = '';
+
+            currentMonthYear.textContent = `${currentYear}年 ${currentMonth + 1}月`;
+
+            for (let i = 0; i < dayOfWeekOfFirstDay; i++) {
+                const emptyCell = document.createElement('div');
+                calendarGrid.appendChild(emptyCell);
+            }
+
+            for (let i = 1; i <= daysInMonth; i++) {
+                const dayCell = document.createElement('div');
+                dayCell.textContent = i;
+                dayCell.classList.add('text-center', 'p-2', 'border', 'rounded-lg', 'hover:bg-gray-200');
+
+                if (i === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear()) {
+                    dayCell.classList.add('bg-blue-200');
+                }
+
+                // Add event listener to each day cell
+                dayCell.addEventListener('click', () => {
+                    console.log(`Selected date: ${currentYear}-${currentMonth + 1}-${i}`);
+                });
+
+                calendarGrid.appendChild(dayCell);
+            }
+        }
+
+        previousMonthBtn.addEventListener('click', () => {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            renderCalendar();
+        });
+
+        nextMonthBtn.addEventListener('click', () => {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            renderCalendar();
+        });
+
+        renderCalendar();
+    </script>
+</body>
+
+</html>

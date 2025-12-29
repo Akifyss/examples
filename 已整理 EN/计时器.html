@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>计时器</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
+  <style>
+    :root {
+      --defaultWidth: 360px;
+      --defaultHeight: 400px;
+      --uiWidth: 100%;
+      --uiHeight: 100%;
+    }
+
+    #timeDisplay {
+      font-family: 'Courier New', monospace;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+  <div id="timerContainer" class="bg-white rounded-lg shadow-md p-4 flex flex-col items-center"
+    style="width: var(--uiWidth); height: var(--uiHeight);">
+    <h1 id="timerTitle" class="text-2xl font-bold mb-4">计时器</h1>
+    <div id="timeDisplay" class="text-6xl font-bold mb-4">
+      <span id="minutes">00</span>:<span id="seconds">00</span>.<span id="milliseconds">00</span>
+    </div>
+    <div id="controls" class="flex space-x-4 mb-4">
+      <button id="startPauseButton" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        <iconify-icon id="startPauseIcon" icon="ic:round-play-arrow"></iconify-icon>
+      </button>
+      <button id="resetButton" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+        <iconify-icon icon="ic:round-replay"></iconify-icon>
+      </button>
+      <button id="lapButton" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+        <iconify-icon icon="ic:round-flag"></iconify-icon>
+      </button>
+    </div>
+    <div id="lapRecords" class="w-full p-4 overflow-y-auto bg-gray-100 flex-1 rounded-lg">
+      <div id="emptyState" class="flex flex-col items-center justify-center h-full">
+        <iconify-icon icon="ic:baseline-info" class="text-gray-400 text-4xl mb-2"></iconify-icon>
+        <p class="text-gray-400">当前没有分段记录</p>
+      </div>
+    </div>
+  </div>
+  <script>
+    const minutesDisplay = document.getElementById('minutes');
+    const secondsDisplay = document.getElementById('seconds');
+    const millisecondsDisplay = document.getElementById('milliseconds');
+    const startPauseButton = document.getElementById('startPauseButton');
+    const startPauseIcon = document.getElementById('startPauseIcon');
+    const resetButton = document.getElementById('resetButton');
+    const lapButton = document.getElementById('lapButton');
+    const lapRecordsContainer = document.getElementById('lapRecords');
+    const emptyState = document.getElementById('emptyState');
+
+    let totalMilliseconds = 0;
+    let intervalId = null;
+
+    function formatTime(time) {
+      const minutes = Math.floor(time / 60000);
+      const seconds = Math.floor((time % 60000) / 1000);
+      const milliseconds = time % 1000;
+      return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(2, '0').substring(0, 2)}`;
+    }
+
+    function toggleTimer() {
+      if (intervalId === null) {
+        startTimer();
+      } else {
+        pauseTimer();
+      }
+    }
+
+    function startTimer() {
+      intervalId = setInterval(() => {
+        totalMilliseconds += 10;
+        const formattedTime = formatTime(totalMilliseconds);
+        minutesDisplay.textContent = formattedTime.split(':')[0];
+        secondsDisplay.textContent = formattedTime.split(':')[1].split('.')[0];
+        millisecondsDisplay.textContent = formattedTime.split('.')[1];
+      }, 10);
+      startPauseIcon.setAttribute('icon', 'ic:round-pause');
+    }
+
+    function pauseTimer() {
+      clearInterval(intervalId);
+      intervalId = null;
+      startPauseIcon.setAttribute('icon', 'ic:round-play-arrow');
+    }
+
+    function resetTimer() {
+      pauseTimer();
+      totalMilliseconds = 0;
+      minutesDisplay.textContent = '00';
+      secondsDisplay.textContent = '00';
+      millisecondsDisplay.textContent = '00';
+      clearLapRecords();
+    }
+
+    function addLapRecord() {
+      const formattedTime = formatTime(totalMilliseconds);
+      const lapRecord = document.createElement('div');
+      lapRecord.className = 'lapRecord text-lg py-1 border-b';
+      lapRecord.textContent = formattedTime;
+      lapRecordsContainer.appendChild(lapRecord);
+      emptyState.style.display = 'none';
+    }
+
+    function clearLapRecords() {
+      const lapRecords = lapRecordsContainer.querySelectorAll('div.lapRecord');
+      lapRecords.forEach(record => record.remove());
+      emptyState.style.display = 'flex';
+    }
+
+    startPauseButton.addEventListener('click', toggleTimer);
+    resetButton.addEventListener('click', resetTimer);
+    lapButton.addEventListener('click', addLapRecord);
+  </script>
+</body>
+
+</html>

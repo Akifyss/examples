@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>清新音乐播放器</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
+    <style>
+        :root {
+            --uiWidth: 400px;
+            --uiHeight: 400px;
+        }
+
+        #player-container {
+            position: relative;
+            background-color: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(30px);
+        }
+
+        #player-background {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+        }
+    </style>
+</head>
+
+<body class="flex items-center justify-center h-screen">
+    <div id="player-container" class="w-full h-full text-gray-800 rounded-3xl p-6 relative overflow-hidden"
+        style="max-width: var(--uiWidth); max-height: var(--uiHeight);">
+        <div id="player-header" class="flex flex-col items-center mb-6 relative z-10">
+            <div id="album-cover" class="mb-4 rounded-xl overflow-hidden shadow-md">
+                <img id="current-cover"
+                    src="https://cdn1.suno.ai/image_768adf51-ba69-44c7-9c6a-a488babb73e7.png"
+                    alt="Album Cover" class="w-40 h-40 object-cover">
+            </div>
+            <div id="player-info" class="text-center">
+                <p id="current-title" class="text-lg font-bold text-gray-900">Shadows of the Holler</p>
+                <p id="current-time" class="text-sm text-gray-500">00:00 / 00:00</p>
+            </div>
+        </div>
+        <div id="player-controls" class="flex items-center justify-center mb-4 space-x-6 text-gray-600 relative z-10">
+            <button id="prev-btn" class="focus:outline-none">
+                <iconify-icon icon="ic:baseline-skip-previous" width="32" height="32"
+                    class="hover:text-gray-900"></iconify-icon>
+            </button>
+            <button id="play-btn" class="focus:outline-none">
+                <iconify-icon icon="ic:baseline-play-circle-outline" width="48" height="48"
+                    class="hover:text-gray-900"></iconify-icon>
+            </button>
+            <button id="next-btn" class="focus:outline-none">
+                <iconify-icon icon="ic:baseline-skip-next" width="32" height="32"
+                    class="hover:text-gray-900"></iconify-icon>
+            </button>
+        </div>
+        <div id="player-progress" class="relative w-full bg-white rounded-full h-2.5 mb-4 relative z-10">
+            <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0;"></div>
+        </div>
+        <audio id="audio" src="https://cdn1.suno.ai/6a6bdd56-d583-4e0a-9869-b98a8c72a37b.mp3" preload="auto"></audio>
+    </div>
+    <div id="player-background" class="w-full h-full text-gray-800 rounded-3xl p-6 relative overflow-hidden"
+        style="background-image: url('https://cdn1.suno.ai/image_768adf51-ba69-44c7-9c6a-a488babb73e7.png'); max-width: var(--uiWidth); max-height: var(--uiHeight);">
+    </div>
+    <script type="text/javascript">
+        const audio = document.getElementById('audio');
+        const playBtn = document.getElementById('play-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const currentTitle = document.getElementById('current-title');
+        const currentTime = document.getElementById('current-time');
+        const currentCover = document.getElementById('current-cover');
+        const playerBackground = document.getElementById('player-background');
+
+        let isPlaying = false;
+        let currentTrackIndex = 0;
+        const trackList = [
+            {
+                src: "https://cdn1.suno.ai/6a6bdd56-d583-4e0a-9869-b98a8c72a37b.mp3",
+                title: "Shadows of the Holler",
+                cover: "https://cdn1.suno.ai/image_768adf51-ba69-44c7-9c6a-a488babb73e7.png"
+            },
+            {
+                src: "https://cdn1.suno.ai/a5e2198a-f352-4abb-9a24-7f81b143ded3.mp3",
+                title: "Stone",
+                cover: "https://cdn1.suno.ai/image_93dab67e-956e-410a-8f7a-487f265a5f5f.png"
+            },
+            {
+                src: "https://cdn1.suno.ai/19807561-1427-4c25-a229-a8c3063d0616.mp3",
+                title: "Egyptian Dance Party",
+                cover: "https://cdn1.suno.ai/image_fd9931b6-154b-4863-9e02-c3c7b19f4d08.png"
+            }
+        ];
+
+        playBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                audio.pause();
+                playBtn.firstElementChild.setAttribute("icon", "ic:baseline-play-circle-outline");
+            } else {
+                audio.play();
+                playBtn.firstElementChild.setAttribute("icon", "ic:baseline-pause-circle-outline");
+            }
+            isPlaying = !isPlaying;
+        });
+
+        prevBtn.addEventListener('click', () => {
+            currentTrackIndex = (currentTrackIndex - 1 + trackList.length) % trackList.length;
+            loadTrack(currentTrackIndex);
+            audio.play();
+            isPlaying = true;
+            playBtn.firstElementChild.setAttribute("icon", "ic:baseline-pause-circle-outline");
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentTrackIndex = (currentTrackIndex + 1) % trackList.length;
+            loadTrack(currentTrackIndex);
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => { }).catch(error => {
+                    console.error(error);
+                });
+            }
+            isPlaying = true;
+            playBtn.firstElementChild.setAttribute("icon", "ic:baseline-pause-circle-outline");
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            const current = audio.currentTime;
+            const duration = audio.duration;
+            progressBar.style.width = (current / duration) * 100 + '%';
+            currentTime.textContent = `${formatTime(current)} / ${formatTime(duration)}`;
+        });
+
+        function loadTrack(index) {
+            const track = trackList[index];
+            audio.src = track.src;
+            currentTitle.textContent = `${track.title}`;
+            currentCover.src = track.cover;
+            playerBackground.style.backgroundImage = `url('${track.cover}')`;
+            audio.load();
+        }
+
+        function formatTime(time) {
+            const minutes = Math.floor(time / 60);
+            const seconds = Math.floor(time % 60).toString().padStart(2, '0');
+            return `${minutes}:${seconds}`;
+        }
+
+        loadTrack(currentTrackIndex);
+    </script>
+</body>
+
+</html>

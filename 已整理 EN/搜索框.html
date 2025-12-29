@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>搜索框组件</title>
+    <style>
+        :root {
+            --defaultWidth: 300px;
+            --defaultHeight: 60px;
+            --uiWidth: var(--defaultWidth);
+            --uiHeight: var(--defaultHeight);
+        }
+
+        #search-container {
+            width: var(--uiWidth);
+            height: var(--uiHeight);
+            position: relative;
+            display: flex;
+            align-items: center;
+            border: 2px solid #ccc;
+            border-radius: 30px;
+            padding: 10px;
+        }
+
+        #search-input {
+            width: 100%;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            padding-left: 10px;
+            background-color: transparent;
+        }
+
+        iconify-icon {
+            cursor: pointer;
+            color: grey;
+        }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
+</head>
+
+<body>
+    <div id="search-container">
+        <input type="text" id="search-input" placeholder="请输入搜索内容...">
+        <iconify-icon id="clean-icon" icon="ic:baseline-clear" width="24" height="24" style="display:none; cursor:pointer; margin-right: 10px;"></iconify-icon>
+        <iconify-icon id="search-icon" icon="ic:baseline-search" width="24" height="24"></iconify-icon>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('search-input');
+        const searchIcon = document.getElementById('search-icon');
+        const cleanIcon = document.getElementById('clean-icon');
+
+        searchInput.addEventListener('input', function () {
+            if (searchInput.value.trim() !== '') {
+                searchIcon.style.color = '#3786f4';
+                cleanIcon.style.display = 'inline';
+            } else {
+                searchIcon.style.color = 'grey';
+                cleanIcon.style.display = 'none';
+            }
+        });
+
+        cleanIcon.addEventListener('click', function () {
+            searchInput.value = '';
+            searchIcon.style.color = 'grey';
+            cleanIcon.style.display = 'none';
+        });
+    </script>
+</body>
+
+</html>

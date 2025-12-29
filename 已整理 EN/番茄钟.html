@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>番茄时钟</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
+    <style>
+        :root {
+            --uiWidth: 500px;
+            --uiHeight: 400px;
+        }
+    </style>
+</head>
+
+<body class="flex items-center justify-center h-screen">
+    <div id="timer-container" class="shadow-lg rounded-lg p-5 bg-white flex flex-col items-center justify-center" style="width: var(--uiWidth); height: var(--uiHeight);">
+        <div id="display-container" class="flex flex-col items-center justify-center" style="width: var(--uiWidth); height: var(--uiHeight); position: relative;">
+            <iconify-icon icon="twemoji:tomato" style="font-size: 16rem; position: absolute;"></iconify-icon>
+            <div id="time-display" class="text-5xl font-bold text-neutral-100" style="position: relative;">25:00</div>
+            <div id="status-message" class="text-sm text-neutral-100" style="position: relative;">工作计时</div>
+            <div id="settings-container" class="hidden" style="position: relative;">
+                <label for="work-time" class="text-sm text-neutral-100 block">工作时间(min):</label>
+                <input id="work-time" type="number" value="25" class="border rounded py-1 px-2 text-black">
+                <label for="break-time" class="text-sm text-neutral-100 block">休息时间(min):</label>
+                <input id="break-time" type="number" value="5" class="border rounded py-1 px-2 text-black">
+            </div>
+        </div>
+        <div id="buttons-container" class="flex space-x-4">
+            <button id="toggle-btn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                <iconify-icon icon="mdi:play"></iconify-icon>
+            </button>
+            <button id="reset-btn" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">
+                <iconify-icon icon="mdi:restart"></iconify-icon>
+            </button>
+            <button id="settings-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                <iconify-icon icon="ic:round-settings"></iconify-icon>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let workTime = 25;
+        let breakTime = 5;
+        let isWorkTime = true;
+        let timer = null;
+        let isSettingsVisible = false;
+        let remainingTime = workTime * 60;
+        let isRunning = false;
+
+        const timeDisplay = document.getElementById('time-display');
+        const statusMessage = document.getElementById('status-message');
+        const toggleButton = document.getElementById('toggle-btn');
+        const resetButton = document.getElementById('reset-btn');
+        const settingsButton = document.getElementById('settings-btn');
+        const settingsContainer = document.getElementById('settings-container');
+        const workTimeInput = document.getElementById('work-time');
+        const breakTimeInput = document.getElementById('break-time');
+
+        function updateTimeDisplay(minutes, seconds) {
+            timeDisplay.textContent = minutes.toLocaleString('en-US', {
+                minimumIntegerDigits: 2
+            }) + ':' + seconds.toLocaleString('en-US', {
+                minimumIntegerDigits: 2
+            });
+        }
+
+        function startTimer() {
+            timer = setInterval(() => {
+                if (remainingTime > 0) {
+                    remainingTime--;
+                    let minutes = Math.floor(remainingTime / 60);
+                    let seconds = remainingTime % 60;
+                    updateTimeDisplay(minutes, seconds);
+                } else {
+                    clearInterval(timer);
+                    toggleTimer();
+                }
+            }, 1000);
+        }
+
+        function toggleTimer() {
+            if (isWorkTime) {
+                remainingTime = breakTime * 60;
+                statusMessage.textContent = '休息计时';
+                isWorkTime = false;
+            } else {
+                remainingTime = workTime * 60;
+                statusMessage.textContent = '工作计时';
+                isWorkTime = true;
+            }
+            startTimer();
+        }
+
+        toggleButton.onclick = () => {
+            if (!isRunning) {
+                startTimer();
+                toggleButton.children[0].setAttribute('icon', 'mdi:pause');
+                isRunning = true;
+            } else {
+                clearInterval(timer);
+                toggleButton.children[0].setAttribute('icon', 'mdi:play');
+                isRunning = false;
+            }
+        };
+
+        resetButton.onclick = () => {
+            clearInterval(timer);
+            isRunning = false;
+            remainingTime = workTime * 60;
+            updateTimeDisplay(workTime, 0);
+            statusMessage.textContent = '工作计时';
+            isWorkTime = true;
+            toggleButton.children[0].setAttribute('icon', 'mdi:play');
+        };
+
+        settingsButton.onclick = () => {
+            isSettingsVisible = !isSettingsVisible;
+            settingsContainer.classList.toggle('hidden');
+            timeDisplay.classList.toggle('hidden');
+            statusMessage.classList.toggle('hidden');
+            settingsButton.children[0].setAttribute('icon', isSettingsVisible ? 'ic:baseline-close' : 'ic:round-settings');
+        };
+
+        workTimeInput.onchange = () => {
+            workTime = parseInt(workTimeInput.value);
+            resetButton.onclick();
+        };
+
+        breakTimeInput.onchange = () => {
+            breakTime = parseInt(breakTimeInput.value);
+        };
+    </script>
+</body>
+
+</html>
