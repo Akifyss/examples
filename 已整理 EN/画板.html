@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>画板</title>
+  <title>Drawing Board</title>
   <style>
     :root {
       --defaultWidth: 800px;
@@ -110,19 +110,19 @@
   <div id="canvas-container">
     <div id="toolbar">
       <select id="shapeSelector" class="tool-item">
-        <option value="none">自由绘制</option>
-        <option value="rectangle">矩形</option>
-        <option value="circle">圆形</option>
+        <option value="none">Free Draw</option>
+        <option value="rectangle">Rectangle</option>
+        <option value="circle">Circle</option>
       </select>
       <select id="brushSize" class="tool-item">
-        <option value="2">细笔</option>
-        <option value="5" selected>中笔</option>
-        <option value="10">粗笔</option>
+        <option value="2">Fine</option>
+        <option value="5" selected>Medium</option>
+        <option value="10">Thick</option>
       </select>
       <input type="color" id="colorPicker" class="tool-item">
-      <button id="clearBtn" class="tool-item">清空</button>
-      <button id="undoBtn" class="tool-item">撤销</button>
-      <button id="redoBtn" class="tool-item">重做</button>
+      <button id="clearBtn" class="tool-item">Clear</button>
+      <button id="undoBtn" class="tool-item">Undo</button>
+      <button id="redoBtn" class="tool-item">Redo</button>
     </div>
     <canvas id="drawingCanvas"></canvas>
   </div>

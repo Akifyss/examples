@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>贪吃蛇游戏</title>
+    <title>Snake Game</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
@@ -61,10 +61,10 @@
 
 <body>
     <div id="game-container" style="width:100% !important; height:100% !important; margin:0!important; max-width:none!important; min-width:none!important; max-height:none!important; min-height:none!important; position:static!important;">
-        <button id="start-button" class="bg-green-500 text-white px-4 py-2 rounded">开始游戏</button>
-        <div id="instruction-text" class="text-white">使用方向键来控制贪吃蛇</div>
+        <button id="start-button" class="bg-green-500 text-white px-4 py-2 rounded">Start Game</button>
+        <div id="instruction-text" class="text-white">Use arrow keys to control the snake</div>
     </div>
-    <div id="toast">游戏结束！</div>
+    <div id="toast">Game Over!</div>
     <script>
         const gameContainer = document.getElementById('game-container');
         const startButton = document.getElementById('start-button');

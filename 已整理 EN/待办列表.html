@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>待办事项列表组件</title>
+    <title>Todo List Component</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
     <style>
@@ -76,7 +76,7 @@
         style="width: 100%; height: 100%; margin:0!important; max-width:none!important; min-width:none!important; max-height:none!important; min-height:none!important; position:static!important;">
         <div id="formSection" class="w-full">
             <div class="input-group">
-                <input id="taskInput" type="text" placeholder="添加新任务..."
+                <input id="taskInput" type="text" placeholder="Add new task..."
                     class="task-input w-full p-2 border rounded-t-lg">
                 <button class="add-btn" id="addButton">
                     <iconify-icon icon="akar-icons:circle-plus-fill"
@@ -84,9 +84,9 @@
                 </button>
             </div>
             <select id="prioritySelect" class="priority-select w-full p-2 border-t-0 border rounded-b-lg">
-                <option value="Low">低优先级</option>
-                <option value="Medium">中优先级</option>
-                <option value="High">高优先级</option>
+                <option value="Low">Low Priority</option>
+                <option value="Medium">Medium Priority</option>
+                <option value="High">High Priority</option>
             </select>
         </div>
         <ul id="taskList" class="w-full mt-4"></ul>
@@ -99,7 +99,7 @@
         const addButton = document.getElementById("addButton");
 
         const initialTasks = [
-            { text: '示例任务', priority: 'Medium', completed: false }
+            { text: 'Sample Task', priority: 'Medium', completed: false }
         ];
 
         const loadTasks = () => {
@@ -119,9 +119,9 @@
                         </div>
                         <div class="flex items-center">
                             <select class="task-priority border p-1 rounded">
-                                <option value="Low" ${priority === 'Low' ? 'selected' : ''}>低</option>
-                                <option value="Medium" ${priority === 'Medium' ? 'selected' : ''}>中</option>
-                                <option value="High" ${priority === 'High' ? 'selected' : ''}>高</option>
+                                <option value="Low" ${priority === 'Low' ? 'selected' : ''}>Low</option>
+                                <option value="Medium" ${priority === 'Medium' ? 'selected' : ''}>Medium</option>
+                                <option value="High" ${priority === 'High' ? 'selected' : ''}>High</option>
                             </select>
                             <button class="delete-task ml-2">
                                 <iconify-icon icon="akar-icons:circle-x-fill"></iconify-icon>

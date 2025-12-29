@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>天气预报卡片</title>
+  <title>Weather Forecast Card</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
   <style>
@@ -18,29 +18,29 @@
 <body class="flex items-center justify-center min-h-screen">
   <div id="weather-card" class="bg-white rounded-lg shadow-lg p-6 w-[var(--uiWidth)] h-[var(--uiHeight)]">
     <div id="city-and-date" class="flex justify-between items-center">
-      <h2 id="city" class="text-2xl font-bold">北京</h2>
-      <p id="date" class="text-gray-500">2024年5月16日</p>
+      <h2 id="city" class="text-2xl font-bold">Beijing</h2>
+      <p id="date" class="text-gray-500">May 16, 2024</p>
     </div>
     <div id="current-weather" class="mt-6 flex items-center">
       <iconify-icon id="weather-icon" icon="wi:day-sunny" class="text-yellow-400 text-6xl"></iconify-icon>
       <div id="temperature-info" class="ml-4">
         <p id="temperature" class="text-4xl font-bold">25°C</p>
-        <p id="weather-description" class="text-gray-500">晴</p>
+        <p id="weather-description" class="text-gray-500">Sunny</p>
       </div>
     </div>
     <div id="forecast" class="mt-6 grid grid-cols-3 gap-4">
       <div id="day1" class="bg-gray-100 rounded-lg p-2 text-center">
-        <p class="text-xs">周五</p>
+        <p class="text-xs">Fri</p>
         <iconify-icon icon="wi:day-cloudy" class="text-gray-500 text-2xl mx-auto mt-2"></iconify-icon>
         <p class="text-lg font-bold mt-2">23°C</p>
       </div>
       <div id="day2" class="bg-gray-100 rounded-lg p-2 text-center">
-        <p class="text-xs">周六</p>
+        <p class="text-xs">Sat</p>
         <iconify-icon icon="wi:rain" class="text-gray-500 text-2xl mx-auto mt-2"></iconify-icon>
         <p class="text-lg font-bold mt-2">20°C</p>
       </div>
       <div id="day3" class="bg-gray-100 rounded-lg p-2 text-center">
-        <p class="text-xs">周日</p>
+        <p class="text-xs">Sun</p>
         <iconify-icon icon="wi:day-sunny" class="text-yellow-400 text-2xl mx-auto mt-2"></iconify-icon>
         <p class="text-lg font-bold mt-2">26°C</p>
       </div>

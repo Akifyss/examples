@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文本播放器</title>
+    <title>Text Player</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
     <style>
@@ -47,16 +47,16 @@
 
 <body>
     <div id="app" class="p-4 flex rounded bg-gray-50">
-        <textarea id="text-input" class="w-full h-4/5 p-2 border rounded resize-none flex-1" placeholder="请输入需要朗读的文本...">多年以后，面对行刑队，奥雷里亚诺·布恩迪亚上校将会回想起父亲带他去见识冰块的那个遥远的下午。</textarea>
+        <textarea id="text-input" class="w-full h-4/5 p-2 border rounded resize-none flex-1" placeholder="Please enter the text to be read aloud...">Many years later, facing the firing squad, Colonel Aureliano Buendía was to remember that distant afternoon when his father took him to discover ice.</textarea>
         <div class="w-full flex items-center justify-between">
             <div class="flex items-center">
                 <iconify-icon id="control-btn" class="text-blue-500 text-3xl" icon="ic:baseline-play-circle"></iconify-icon>
                 <iconify-icon id="restart-btn" class="ml-2 text-green-500 text-3xl" icon="ic:baseline-replay-circle-filled"></iconify-icon>
-                <label for="rate-range" class="ml-2 text-gray-600">语速</label>
+                <label for="rate-range" class="ml-2 text-gray-600">Speed</label>
                 <input id="rate-range" type="range" min="0.5" max="2" value="1" step="0.1" class="ml-2 w-full" style="max-width: 100px;">
                 <span id="rate-value" class="ml-2 text-gray-600">1</span>
             </div>
-            <span id="status" class="text-gray-600">暂停中</span>
+            <span id="status" class="text-gray-600">Paused</span>
         </div>
     </div>
 
@@ -91,13 +91,13 @@
             if (isPlaying) {
                 window.speechSynthesis.cancel();
                 controlBtn.setAttribute('icon', 'ic:baseline-play-circle');
-                statusText.textContent = '暂停中';
+                statusText.textContent = 'Paused';
             } else {
                 utterance.text = textArea.value.substring(pausedAt);
                 utterance.rate = rateRange.value;
                 window.speechSynthesis.speak(utterance);
                 controlBtn.setAttribute('icon', 'ic:baseline-pause-circle');
-                statusText.textContent = '播放中';
+                statusText.textContent = 'Playing';
             }
             isPlaying = !isPlaying;
         });
@@ -109,7 +109,7 @@
             utterance.rate = rateRange.value;
             window.speechSynthesis.speak(utterance);
             controlBtn.setAttribute('icon', 'ic:baseline-pause-circle');
-            statusText.textContent = '播放中';
+            statusText.textContent = 'Playing';
             isPlaying = true;
         });
 
@@ -117,7 +117,7 @@
             isPlaying = false;
             pausedAt = 0;
             controlBtn.setAttribute('icon', 'ic:baseline-play-circle');
-            statusText.textContent = '暂停中';
+            statusText.textContent = 'Paused';
         };
     </script>
 </body>

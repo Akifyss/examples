@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>移动端聊天界面</title>
+    <title>Mobile Chat Interface</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
     <style>
@@ -27,7 +27,7 @@
     <div id="chat-container" class="flex flex-col h-full bg-gray-100">
         <header id="chat-header" class="bg-blue-600 text-white p-4 flex items-center">
             <iconify-icon icon="mdi:arrow-left" class="text-2xl mr-4"></iconify-icon>
-            <div id="chat-title" class="flex-1">聊天</div>
+            <div id="chat-title" class="flex-1">Chat</div>
             <iconify-icon icon="mdi:dots-vertical" class="text-2xl"></iconify-icon>
         </header>
         <main id="chat-content" class="flex-1 p-4 overflow-auto">
@@ -36,7 +36,7 @@
                     class="w-10 h-10 rounded-full mr-3 self-start object-cover">
                 <div>
                     <div class="bg-white p-3 rounded-lg shadow-sm max-w-xs">
-                        你好！今天的工作进展得如何？
+                        Hello! How is your work progressing today?
                     </div>
                     <div class="text-xs text-gray-500 mt-1">10:35</div>
                 </div>
@@ -44,7 +44,7 @@
             <div id="message-2" class="mb-4 flex items-start justify-end text-right">
                 <div>
                     <div class="bg-blue-500 text-white p-3 rounded-lg shadow-sm max-w-xs ml-auto">
-                        进展顺利，谢谢你。你呢？
+                        Progress is smooth, thank you. How about you?
                     </div>
                     <div class="text-xs text-gray-500 mt-1">10:37</div>
                 </div>
@@ -56,14 +56,14 @@
                     class="w-10 h-10 rounded-full mr-3 self-start object-cover">
                 <div>
                     <div class="bg-white p-3 rounded-lg shadow-sm max-w-xs">
-                        我也很好，期待今天的会议。
+                        I'm also doing well, looking forward to today's meeting.
                     </div>
                     <div class="text-xs text-gray-500 mt-1">10:40</div>
                 </div>
             </div>
         </main>
         <div id="chat-input" class="p-4 bg-white border-t flex items-center">
-            <input id="message-input" type="text" placeholder="输入消息..."
+            <input id="message-input" type="text" placeholder="Enter message..."
                 class="flex-1 p-2 border rounded-lg shadow-inner" />
             <button id="send-button"
                 class="ml-4 bg-blue-600 text-white p-2 rounded-lg w-10 h-10 flex items-center justify-center">

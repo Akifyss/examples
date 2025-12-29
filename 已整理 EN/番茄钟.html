@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>番茄时钟</title>
+    <title>Pomodoro Timer</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
     <style>
@@ -20,11 +20,11 @@
         <div id="display-container" class="flex flex-col items-center justify-center" style="width: var(--uiWidth); height: var(--uiHeight); position: relative;">
             <iconify-icon icon="twemoji:tomato" style="font-size: 16rem; position: absolute;"></iconify-icon>
             <div id="time-display" class="text-5xl font-bold text-neutral-100" style="position: relative;">25:00</div>
-            <div id="status-message" class="text-sm text-neutral-100" style="position: relative;">工作计时</div>
+            <div id="status-message" class="text-sm text-neutral-100" style="position: relative;">Work Timer</div>
             <div id="settings-container" class="hidden" style="position: relative;">
-                <label for="work-time" class="text-sm text-neutral-100 block">工作时间(min):</label>
+                <label for="work-time" class="text-sm text-neutral-100 block">Work Time(min):</label>
                 <input id="work-time" type="number" value="25" class="border rounded py-1 px-2 text-black">
-                <label for="break-time" class="text-sm text-neutral-100 block">休息时间(min):</label>
+                <label for="break-time" class="text-sm text-neutral-100 block">Break Time(min):</label>
                 <input id="break-time" type="number" value="5" class="border rounded py-1 px-2 text-black">
             </div>
         </div>
@@ -84,11 +84,11 @@
         function toggleTimer() {
             if (isWorkTime) {
                 remainingTime = breakTime * 60;
-                statusMessage.textContent = '休息计时';
+                statusMessage.textContent = 'Break Timer';
                 isWorkTime = false;
             } else {
                 remainingTime = workTime * 60;
-                statusMessage.textContent = '工作计时';
+                statusMessage.textContent = 'Work Timer';
                 isWorkTime = true;
             }
             startTimer();
@@ -111,7 +111,7 @@
             isRunning = false;
             remainingTime = workTime * 60;
             updateTimeDisplay(workTime, 0);
-            statusMessage.textContent = '工作计时';
+            statusMessage.textContent = 'Work Timer';
             isWorkTime = true;
             toggleButton.children[0].setAttribute('icon', 'mdi:play');
         };

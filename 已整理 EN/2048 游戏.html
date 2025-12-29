@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-cn">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2048 游戏</title>
+    <title>2048 Game</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
     <style>
@@ -89,12 +89,12 @@
         <div id="container" class="flex flex-col items-center">
             <div class="flex justify-between items-center w-full mb-4">
                 <div class="flex flex-col flex-1 items-start">
-                    <div id="score" class="text-2xl font-bold text-yellow-600">分数: 0</div>
-                    <div id="bestScore" class="text-2xl font-bold text-yellow-400">最高分: 0</div>
+                    <div id="score" class="text-2xl font-bold text-yellow-600">Score: 0</div>
+                    <div id="bestScore" class="text-2xl font-bold text-yellow-400">Best Score: 0</div>
                 </div>
                 <div class="flex-1 text-center text-4xl font-bold text-yellow-900">2048</div>
                 <div class="flex flex-1 justify-end">
-                    <button id="restart" class="px-4 py-2 bg-yellow-800 text-white rounded">重新开始</button>
+                    <button id="restart" class="px-4 py-2 bg-yellow-800 text-white rounded">Restart</button>
                 </div>
             </div>
         </div>
@@ -120,11 +120,11 @@
 
     <div id="modal" class="flex">
         <div id="modalContent">
-            <h2 class="text-2xl font-bold mb-4">2048 游戏玩法</h2>
-            <p class="text-gray-700 mb-4">使用方向键来移动方块。</p>
-            <p class="text-gray-700 mb-4">当两个相同的数字相遇时，它们会合并成一个更大的数字。</p>
-            <p class="text-gray-700 mb-4">通过这一过程，试着达到2048吧！</p>
-            <button id="startGame" class="px-4 py-2 bg-yellow-800 text-white rounded">开始游戏</button>
+            <h2 class="text-2xl font-bold mb-4">How to Play 2048</h2>
+            <p class="text-gray-700 mb-4">Use arrow keys to move tiles.</p>
+            <p class="text-gray-700 mb-4">When two identical numbers meet, they merge into a larger number.</p>
+            <p class="text-gray-700 mb-4">Through this process, try to reach 2048!</p>
+            <button id="startGame" class="px-4 py-2 bg-yellow-800 text-white rounded">Start Game</button>
         </div>
     </div>
 
@@ -184,10 +184,10 @@
         }
 
         function updateScore() {
-            document.getElementById('score').textContent = `分数: ${currentScore}`;
+            document.getElementById('score').textContent = `Score: ${currentScore}`;
             if (currentScore > bestScore) {
                 bestScore = currentScore;
-                document.getElementById('bestScore').textContent = `最高分: ${bestScore}`;
+                document.getElementById('bestScore').textContent = `Best Score: ${bestScore}`;
             }
         }
 
@@ -270,7 +270,7 @@
         });
 
         // Set initial best score
-        document.getElementById('bestScore').textContent = `最高分: ${bestScore}`;
+        document.getElementById('bestScore').textContent = `Best Score: ${bestScore}`;
 
         // Show modal on page load
         document.getElementById('modal').style.display = 'flex';

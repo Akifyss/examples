@@ -45,13 +45,13 @@
             </button>
         </div>
         <div id="weekdays" class="grid grid-cols-7 gap-2 p-2 text-center text-gray-500">
-            <div id="sunday">日</div>
-            <div id="monday">一</div>
-            <div id="tuesday">二</div>
-            <div id="wednesday">三</div>
-            <div id="thursday">四</div>
-            <div id="friday">五</div>
-            <div id="saturday">六</div>
+            <div id="sunday">Sun</div>
+            <div id="monday">Mon</div>
+            <div id="tuesday">Tue</div>
+            <div id="wednesday">Wed</div>
+            <div id="thursday">Thu</div>
+            <div id="friday">Fri</div>
+            <div id="saturday">Sat</div>
         </div>
         <div id="calendarGrid" class="grid grid-cols-7 gap-2 p-2"></div>
     </div>
@@ -73,7 +73,7 @@
 
             calendarGrid.innerHTML = '';
 
-            currentMonthYear.textContent = `${currentYear}年 ${currentMonth + 1}月`;
+            currentMonthYear.textContent = `${currentYear} ${currentMonth + 1}`;
 
             for (let i = 0; i < dayOfWeekOfFirstDay; i++) {
                 const emptyCell = document.createElement('div');

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -72,14 +72,14 @@
     <div class="game-container bg-white mx-auto p-4 rounded shadow-lg flex flex-col items-center text-orange-950">
         <div class="grid grid-cols-3 gap-4 w-full h-full justify-center items-center place-items-center">
             <div id="time-container" class="hole">
-                <span>时间: <span id="time" class="font-bold">30</span> 秒</span>
+                <span>Time: <span id="time" class="font-bold">30</span>s</span>
             </div>
             <div id="restart-button" class="button text-center text-lg">
-                <span>重新开始</span>
+                <span>Restart</span>
             </div>
             <div id="score-container" class="score-container flex flex-col items-center justify-center">
-                <span>得分: <span id="score" class="font-bold">0</span></span>
-                <span>最高分: <span id="high-score" class="font-bold">0</span></span>
+                <span>Score: <span id="score" class="font-bold">0</span></span>
+                <span>High Score: <span id="high-score" class="font-bold">0</span></span>
             </div>
         </div>
         <div class="grid grid-cols-3 gap-4 w-full h-full justify-center items-center place-items-center">
@@ -219,7 +219,7 @@
                 clearTimeout(currentTimeout);
                 showMole();
 
-                // 添加视觉反馈
+                // Add visual feedback
                 const hole = document.getElementById(`hole-${index + 1}`);
                 hole.classList.add('hit-feedback');
                 const hitPopup = document.createElement('div');
